@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tuts+ Translation Stats</title>
+  <link rel="stylesheet" href="jquery-jvectormap-1.2.2.css" type="text/css" media="screen"/>
+  <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+  <script src="jquery-jvectormap-1.2.2.min.js"></script>
+  <script src="jquery-jvectormap-world-mill-en.js"></script>
+  <script src="translation-stats-data.js"></script>
+  
+  <style>
+  /* Ian: Feel free to change anything in this style section */
+  #world-map {
+    width: 600px;
+    height: 400px;
+  }
+  </style>
+
+</head>
+<body>
+  <!-- Ian: Feel free to add any HTML up here -->
+
+  <!-- Don't remove this div, though! -->
+  <div id="world-map"></div>
+  <script>
+    /* Ian: Feel free to change anything that's part of the DESIGN namespace */
+    var DESIGN = {
+      minValue: 0,
+      maxValue: 100,
+      scale: ['#ffffff', '#000000'],    // you can add intermediate colours
+      backgroundColor: '#888888'
+    };
+    DESIGN.switchPost = function(post_id, language_code, title, instructor, url, translated_title, translator, translation_url) {
+      // This function is run whenever a different translation or post is selected, AFTER the map is changed
+      // For the original (English) posts, translated_title, translator, and translation_url are the same as title, instructor, and url, respectively
+
+      
+    }
+    /* Don't change any JS after here! */
+
+    var mapObject = {};
+    //Clone the world map that uses ISO-2 keys
+    var countriesByName = $.extend(true, {}, jvm.WorldMap.maps['world_mill_en']);
+
+    countriesByName.paths = {}; //clear the paths
+
+    $.each(jvm.WorldMap.maps['world_mill_en'].paths, function(key, obj){
+       //create new path entries, keyed by the country name
+       countriesByName.paths[obj.name] = obj; 
+    });  
+
+    //Add this new data map, to be loaded
+    $.fn.vectorMap('addMap', 'world_mill_en_byName', countriesByName);
+
+    $(function(){
+     $('#world-map').vectorMap({
+        map: 'world_mill_en_byName',
+        series: {
+          regions: [{
+            values: translationInfo[0]['traffic_percentage_by_country'],
+            scale: DESIGN.scale,
+            normalizeFunction: 'linear',
+            min: DESIGN.minValue,
+            max: DESIGN.maxValue
+          }]
+        },
+        backgroundColor: DESIGN.backgroundColor,
+        zoomOnScroll: false,
+        zoomButtons: false
+      });
+      mapObject = $('#world-map').vectorMap('get', 'mapObject');
+      switchTranslation(7991, 'en');
+    });
+
+    function switchTranslation(post_id, lang) {
+      mapObject.reset();
+      mapObject.series.regions[0].scale.setMin(DESIGN.minValue);
+      mapObject.series.regions[0].scale.setMax(DESIGN.maxValue);
+      mapObject.series.regions[0].scale.setScale(DESIGN.scale);
+      var post = {};
+      for (var j = 0; j < translationInfo.length; j++) {
+        if (translationInfo[j]['post_id'] === String(post_id)) {
+          post = translationInfo[j];
+        }
+      }
+
+      if (lang == 'en') {
+        mapObject.series.regions[0].setValues(post['traffic_percentage_by_country']);
+        DESIGN.switchPost(post_id, lang, post['title'], post['instructor'], post['url'], post['title'], post['instructor'], post['url']);
+      } else {
+        for (var i = 0; i < post['translations'].length; i++) {
+          if (post['translations'][i]['language_code'] == lang) {
+            selectedTranslation = post['translations'][i];
+            mapObject.series.regions[0].setValues(selectedTranslation['traffic_percentage_by_country']);
+            DESIGN.switchPost(post_id, lang, post['title'], post['instructor'], post['url'], selectedTranslation['title'], selectedTranslation['translator'], selectedTranslation['url']);
+          }
+        }
+      }
+    }
+  </script>
+
+  <!--
+  Ian: Feel free to change or remove any of this HTML; it's just to demonstrate how it all works.
+  The important thing is to call switchTranslation(post_id, language_code) at the appropriate point.
+  -->
+
+<!--
+  <span class="languageName" onclick="switchTranslation(7991, 'en');">English</span>
+  <span class="languageName" onclick="switchTranslation(7991, 'es');">Spanish</span>
+-->
+
+
+<div class="post post_3481">
+    <h2 class="post_title post_title_3481">9 Sketch Features You Should be Using</h2>
+    <div class="translations translations_3481">
+        <span class='translation translation_3481 translation_en' onclick='switchTranslation(3481, "en")'>en</span> <span class='translation translation_3481 translation_zh-hant' onclick='switchTranslation(3481, "zh-hant")'>zh-hant</span> <span class='translation translation_3481 translation_pt' onclick='switchTranslation(3481, "pt")'>pt</span> <span class='translation translation_3481 translation_id' onclick='switchTranslation(3481, "id")'>id</span>
+    </div>
+</div>
+    
+<div class="post post_4352">
+    <h2 class="post_title post_title_4352">10 Terminal Commands That Every Mac User Should Know</h2>
+    <div class="translations translations_4352">
+        <span class='translation translation_4352 translation_en' onclick='switchTranslation(4352, "en")'>en</span> <span class='translation translation_4352 translation_de' onclick='switchTranslation(4352, "de")'>de</span>
+    </div>
+</div>
+    
+<div class="post post_4962">
+    <h2 class="post_title post_title_4962">A Simple, Responsive, Mobile First Navigation</h2>
+    <div class="translations translations_4962">
+        <span class='translation translation_4962 translation_en' onclick='switchTranslation(4962, "en")'>en</span> <span class='translation translation_4962 translation_ru' onclick='switchTranslation(4962, "ru")'>ru</span> <span class='translation translation_4962 translation_zh-hant' onclick='switchTranslation(4962, "zh-hant")'>zh-hant</span> <span class='translation translation_4962 translation_pt' onclick='switchTranslation(4962, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_7408">
+    <h2 class="post_title post_title_7408">Bring Your Forms Up to Date With CSS3 and HTML5 Validation</h2>
+    <div class="translations translations_7408">
+        <span class='translation translation_7408 translation_en' onclick='switchTranslation(7408, "en")'>en</span> <span class='translation translation_7408 translation_pt' onclick='switchTranslation(7408, "pt")'>pt</span> <span class='translation translation_7408 translation_zh-hans' onclick='switchTranslation(7408, "zh-hans")'>zh-hans</span> <span class='translation translation_7408 translation_es' onclick='switchTranslation(7408, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_7991">
+    <h2 class="post_title post_title_7991">Principles for Successful Button Design </h2>
+    <div class="translations translations_7991">
+        <span class='translation translation_7991 translation_en' onclick='switchTranslation(7991, "en")'>en</span> <span class='translation translation_7991 translation_hu' onclick='switchTranslation(7991, "hu")'>hu</span> <span class='translation translation_7991 translation_es' onclick='switchTranslation(7991, "es")'>es</span> <span class='translation translation_7991 translation_zh-hans' onclick='switchTranslation(7991, "zh-hans")'>zh-hans</span> <span class='translation translation_7991 translation_tr' onclick='switchTranslation(7991, "tr")'>tr</span> <span class='translation translation_7991 translation_fr' onclick='switchTranslation(7991, "fr")'>fr</span> <span class='translation translation_7991 translation_id' onclick='switchTranslation(7991, "id")'>id</span> <span class='translation translation_7991 translation_pt' onclick='switchTranslation(7991, "pt")'>pt</span> <span class='translation translation_7991 translation_ru' onclick='switchTranslation(7991, "ru")'>ru</span>
+    </div>
+</div>
+    
+<div class="post post_8624">
+    <h2 class="post_title post_title_8624">A Beginner's Guide to Pairing Fonts</h2>
+    <div class="translations translations_8624">
+        <span class='translation translation_8624 translation_en' onclick='switchTranslation(8624, "en")'>en</span> <span class='translation translation_8624 translation_fr' onclick='switchTranslation(8624, "fr")'>fr</span> <span class='translation translation_8624 translation_es' onclick='switchTranslation(8624, "es")'>es</span> <span class='translation translation_8624 translation_pl' onclick='switchTranslation(8624, "pl")'>pl</span> <span class='translation translation_8624 translation_id' onclick='switchTranslation(8624, "id")'>id</span>
+    </div>
+</div>
+    
+<div class="post post_8934">
+    <h2 class="post_title post_title_8934">An Introduction to SEO</h2>
+    <div class="translations translations_8934">
+        <span class='translation translation_8934 translation_en' onclick='switchTranslation(8934, "en")'>en</span> <span class='translation translation_8934 translation_de' onclick='switchTranslation(8934, "de")'>de</span> <span class='translation translation_8934 translation_es' onclick='switchTranslation(8934, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_9203">
+    <h2 class="post_title post_title_9203">A Beginner's Guide to Wireframing</h2>
+    <div class="translations translations_9203">
+        <span class='translation translation_9203 translation_en' onclick='switchTranslation(9203, "en")'>en</span> <span class='translation translation_9203 translation_fr' onclick='switchTranslation(9203, "fr")'>fr</span> <span class='translation translation_9203 translation_de' onclick='switchTranslation(9203, "de")'>de</span> <span class='translation translation_9203 translation_es' onclick='switchTranslation(9203, "es")'>es</span> <span class='translation translation_9203 translation_pt' onclick='switchTranslation(9203, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_9386">
+    <h2 class="post_title post_title_9386">Build an HTML Email Template From Scratch</h2>
+    <div class="translations translations_9386">
+        <span class='translation translation_9386 translation_en' onclick='switchTranslation(9386, "en")'>en</span> <span class='translation translation_9386 translation_id' onclick='switchTranslation(9386, "id")'>id</span> <span class='translation translation_9386 translation_es' onclick='switchTranslation(9386, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_9500">
+    <h2 class="post_title post_title_9500">Build a Modular Dashboard Interface With Pure</h2>
+    <div class="translations translations_9500">
+        <span class='translation translation_9500 translation_en' onclick='switchTranslation(9500, "en")'>en</span> <span class='translation translation_9500 translation_pt' onclick='switchTranslation(9500, "pt")'>pt</span> <span class='translation translation_9500 translation_fr' onclick='switchTranslation(9500, "fr")'>fr</span> <span class='translation translation_9500 translation_es' onclick='switchTranslation(9500, "es")'>es</span> <span class='translation translation_9500 translation_id' onclick='switchTranslation(9500, "id")'>id</span> <span class='translation translation_9500 translation_ru' onclick='switchTranslation(9500, "ru")'>ru</span>
+    </div>
+</div>
+    
+<div class="post post_10042">
+    <h2 class="post_title post_title_10042">Quick Tip: Don't Forget the Viewport Meta Tag</h2>
+    <div class="translations translations_10042">
+        <span class='translation translation_10042 translation_en' onclick='switchTranslation(10042, "en")'>en</span> <span class='translation translation_10042 translation_es' onclick='switchTranslation(10042, "es")'>es</span> <span class='translation translation_10042 translation_de' onclick='switchTranslation(10042, "de")'>de</span> <span class='translation translation_10042 translation_id' onclick='switchTranslation(10042, "id")'>id</span> <span class='translation translation_10042 translation_fr' onclick='switchTranslation(10042, "fr")'>fr</span> <span class='translation translation_10042 translation_pt' onclick='switchTranslation(10042, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_12084">
+    <h2 class="post_title post_title_12084">The 30 CSS Selectors you Must Memorize</h2>
+    <div class="translations translations_12084">
+        <span class='translation translation_12084 translation_en' onclick='switchTranslation(12084, "en")'>en</span> <span class='translation translation_12084 translation_ru' onclick='switchTranslation(12084, "ru")'>ru</span> <span class='translation translation_12084 translation_es' onclick='switchTranslation(12084, "es")'>es</span> <span class='translation translation_12084 translation_fr' onclick='switchTranslation(12084, "fr")'>fr</span>
+    </div>
+</div>
+    
+<div class="post post_12357">
+    <h2 class="post_title post_title_12357">28 HTML5 Features, Tips, and Techniques you Must Know</h2>
+    <div class="translations translations_12357">
+        <span class='translation translation_12357 translation_en' onclick='switchTranslation(12357, "en")'>en</span> <span class='translation translation_12357 translation_ru' onclick='switchTranslation(12357, "ru")'>ru</span>
+    </div>
+</div>
+    
+<div class="post post_12833">
+    <h2 class="post_title post_title_12833">Quick Tip - jQuery Newbs: Stop Jumping in the Pool</h2>
+    <div class="translations translations_12833">
+        <span class='translation translation_12833 translation_en' onclick='switchTranslation(12833, "en")'>en</span> <span class='translation translation_12833 translation_es' onclick='switchTranslation(12833, "es")'>es</span> <span class='translation translation_12833 translation_pt' onclick='switchTranslation(12833, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_13976">
+    <h2 class="post_title post_title_13976">Understanding Hash Functions and Keeping Passwords Safe</h2>
+    <div class="translations translations_13976">
+        <span class='translation translation_13976 translation_en' onclick='switchTranslation(13976, "en")'>en</span> <span class='translation translation_13976 translation_pt' onclick='switchTranslation(13976, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_14409">
+    <h2 class="post_title post_title_14409">PDO vs. MySQLi: Which Should You Use?</h2>
+    <div class="translations translations_14409">
+        <span class='translation translation_14409 translation_en' onclick='switchTranslation(14409, "en")'>en</span> <span class='translation translation_14409 translation_pt' onclick='switchTranslation(14409, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_14417">
+    <h2 class="post_title post_title_14417">Why you Should be using PHP's PDO for Database Access</h2>
+    <div class="translations translations_14417">
+        <span class='translation translation_14417 translation_en' onclick='switchTranslation(14417, "en")'>en</span> <span class='translation translation_14417 translation_pt' onclick='switchTranslation(14417, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_14540">
+    <h2 class="post_title post_title_14540">Illustrator's Type Tool: A Comprehensive Introduction</h2>
+    <div class="translations translations_14540">
+        <span class='translation translation_14540 translation_en' onclick='switchTranslation(14540, "en")'>en</span> <span class='translation translation_14540 translation_ru' onclick='switchTranslation(14540, "ru")'>ru</span>
+    </div>
+</div>
+    
+<div class="post post_14943">
+    <h2 class="post_title post_title_14943">7 Posing Techniques for Non-Models</h2>
+    <div class="translations translations_14943">
+        <span class='translation translation_14943 translation_en' onclick='switchTranslation(14943, "en")'>en</span> <span class='translation translation_14943 translation_zh-hans' onclick='switchTranslation(14943, "zh-hans")'>zh-hans</span> <span class='translation translation_14943 translation_es' onclick='switchTranslation(14943, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_14973">
+    <h2 class="post_title post_title_14973">Create a Sparkly Female Portrait in Illustrator</h2>
+    <div class="translations translations_14973">
+        <span class='translation translation_14973 translation_en' onclick='switchTranslation(14973, "en")'>en</span> <span class='translation translation_14973 translation_es' onclick='switchTranslation(14973, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_15073">
+    <h2 class="post_title post_title_15073">100 Free Photoshop Actions (And How to Make Your Own)</h2>
+    <div class="translations translations_15073">
+        <span class='translation translation_15073 translation_en' onclick='switchTranslation(15073, "en")'>en</span> <span class='translation translation_15073 translation_es' onclick='switchTranslation(15073, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_15081">
+    <h2 class="post_title post_title_15081">100 Free Lightroom Presets (And How to Make Your Own)</h2>
+    <div class="translations translations_15081">
+        <span class='translation translation_15081 translation_en' onclick='switchTranslation(15081, "en")'>en</span> <span class='translation translation_15081 translation_es' onclick='switchTranslation(15081, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_15309">
+    <h2 class="post_title post_title_15309">Creating a Simple Responsive HTML Email</h2>
+    <div class="translations translations_15309">
+        <span class='translation translation_15309 translation_en' onclick='switchTranslation(15309, "en")'>en</span> <span class='translation translation_15309 translation_ru' onclick='switchTranslation(15309, "ru")'>ru</span> <span class='translation translation_15309 translation_de' onclick='switchTranslation(15309, "de")'>de</span> <span class='translation translation_15309 translation_es' onclick='switchTranslation(15309, "es")'>es</span> <span class='translation translation_15309 translation_fr' onclick='switchTranslation(15309, "fr")'>fr</span> <span class='translation translation_15309 translation_id' onclick='switchTranslation(15309, "id")'>id</span>
+    </div>
+</div>
+    
+<div class="post post_16264">
+    <h2 class="post_title post_title_16264">Laravel 4: A Start at a RESTful API (Updated)</h2>
+    <div class="translations translations_16264">
+        <span class='translation translation_16264 translation_en' onclick='switchTranslation(16264, "en")'>en</span> <span class='translation translation_16264 translation_fr' onclick='switchTranslation(16264, "fr")'>fr</span> <span class='translation translation_16264 translation_pt' onclick='switchTranslation(16264, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_17047">
+    <h2 class="post_title post_title_17047">Creating a Simple Kawaii Yeti With Basic Shapes in Adobe Illustrator</h2>
+    <div class="translations translations_17047">
+        <span class='translation translation_17047 translation_en' onclick='switchTranslation(17047, "en")'>en</span> <span class='translation translation_17047 translation_zh-hans' onclick='switchTranslation(17047, "zh-hans")'>zh-hans</span> <span class='translation translation_17047 translation_es' onclick='switchTranslation(17047, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_17141">
+    <h2 class="post_title post_title_17141">Illustrator's Pen Tool: The Comprehensive Guide</h2>
+    <div class="translations translations_17141">
+        <span class='translation translation_17141 translation_en' onclick='switchTranslation(17141, "en")'>en</span> <span class='translation translation_17141 translation_es' onclick='switchTranslation(17141, "es")'>es</span>
+    </div>
+</div>
+    
+<div class="post post_18810">
+    <h2 class="post_title post_title_18810">Simple Visual Enhancements for Better Coding in Sublime Text</h2>
+    <div class="translations translations_18810">
+        <span class='translation translation_18810 translation_en' onclick='switchTranslation(18810, "en")'>en</span> <span class='translation translation_18810 translation_tr' onclick='switchTranslation(18810, "tr")'>tr</span> <span class='translation translation_18810 translation_ru' onclick='switchTranslation(18810, "ru")'>ru</span> <span class='translation translation_18810 translation_pt' onclick='switchTranslation(18810, "pt")'>pt</span> <span class='translation translation_18810 translation_id' onclick='switchTranslation(18810, "id")'>id</span> <span class='translation translation_18810 translation_es' onclick='switchTranslation(18810, "es")'>es</span> <span class='translation translation_18810 translation_de' onclick='switchTranslation(18810, "de")'>de</span>
+    </div>
+</div>
+    
+<div class="post post_18959">
+    <h2 class="post_title post_title_18959">Testing Laravel Controllers</h2>
+    <div class="translations translations_18959">
+        <span class='translation translation_18959 translation_en' onclick='switchTranslation(18959, "en")'>en</span> <span class='translation translation_18959 translation_pt' onclick='switchTranslation(18959, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_19034">
+    <h2 class="post_title post_title_19034">BDD With Behat</h2>
+    <div class="translations translations_19034">
+        <span class='translation translation_19034 translation_en' onclick='switchTranslation(19034, "en")'>en</span> <span class='translation translation_19034 translation_pt' onclick='switchTranslation(19034, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_19444">
+    <h2 class="post_title post_title_19444">9 Quick Wins for Halfway-Decent Design</h2>
+    <div class="translations translations_19444">
+        <span class='translation translation_19444 translation_en' onclick='switchTranslation(19444, "en")'>en</span> <span class='translation translation_19444 translation_de' onclick='switchTranslation(19444, "de")'>de</span> <span class='translation translation_19444 translation_es' onclick='switchTranslation(19444, "es")'>es</span> <span class='translation translation_19444 translation_fr' onclick='switchTranslation(19444, "fr")'>fr</span> <span class='translation translation_19444 translation_id' onclick='switchTranslation(19444, "id")'>id</span> <span class='translation translation_19444 translation_pt' onclick='switchTranslation(19444, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_19952">
+    <h2 class="post_title post_title_19952">Laravel Unwrapped: Session, Auth and Cache</h2>
+    <div class="translations translations_19952">
+        <span class='translation translation_19952 translation_en' onclick='switchTranslation(19952, "en")'>en</span> <span class='translation translation_19952 translation_pt' onclick='switchTranslation(19952, "pt")'>pt</span>
+    </div>
+</div>
+    
+<div class="post post_20919">
+    <h2 class="post_title post_title_20919">Getting Started With Phpspec</h2>
+    <div class="translations translations_20919">
+        <span class='translation translation_20919 translation_en' onclick='switchTranslation(20919, "en")'>en</span> <span class='translation translation_20919 translation_pt' onclick='switchTranslation(20919, "pt")'>pt</span>
+    </div>
+</div>
+    
+
+</body>
+</html>
