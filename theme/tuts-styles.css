@@ -92,6 +92,11 @@ nav .global-nav__header-tuts-logo-link img {
 	margin-right: 20px;
 }
 
+span.page-footer__tuts-brand-text {
+	color: #939e83;
+}
+
+
 /* translation links */
 span.translation {
 	cursor: pointer;
@@ -151,6 +156,11 @@ span.translation_zh-hans:before { 	background: url(flags/cn.gif) no-repeat 0 0;	
 	border-radius: 2px;
 	padding: .4em .8em;
 	z-index: 2
+}
+
+footer {
+	font-size: .8em;
+	padding: 100px 0 0 0;
 }
 
 @media screen and (min-width: 1200px) {
