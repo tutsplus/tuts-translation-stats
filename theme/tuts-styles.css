@@ -1,0 +1,123 @@
+
+/*
+    DEFAULT BODY STYLES
+*/
+body {
+    background: #fdfdfd;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 1em;
+    line-height: 1.625;
+    color: #4b4b4b;
+    width: 100%;
+    margin: 0;
+    padding: 500px 0 0 0;
+    -webkit-font-smoothing: antialiased;
+    
+}
+
+.wrapper {
+    width: 90%;
+    margin: 10px auto;
+}
+@media screen and (min-width: 768px) {
+    .wrapper {
+        width: 650px;
+    }
+}
+
+section.wrapper {
+	margin-top: 40px;
+	margin-bottom: 100px;
+}
+
+@media screen and (max-width: 600px) {
+    .post {
+        margin-left: 0;
+    }
+    blockquote {
+        padding-left: 1em;
+    }
+}
+
+
+
+/*
+    COUPLE OF TYPOGRAPHY PIECES WITHIN POST
+*/
+
+h1 {
+    font: bold 2.4/1em "Helvetica Neue", Arial, sans-serif;
+    margin: 0 0 .4725em;
+    color: #2a3744;
+    letter-spacing: -.04em;
+}
+h2 {
+    font: bold 1.4em/1em "Helvetica Neue", Arial, sans-serif;
+    margin: 0 0 .8em;
+    color: #2a3744;
+    letter-spacing: -.04em;
+}
+
+h2, h3, h4 {
+	margin-top: 50px;
+}
+
+@media screen and (max-width: 600px) {
+    h2 {
+        font-size: 1.75em;
+    }
+}
+
+a {
+    color: #136fd2;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #136fd2;
+    text-decoration: underline;
+}
+
+
+
+/*
+    NOW FOR THE NAVIGATION BAR
+*/
+
+nav {
+    background: #2a3744;
+    width: 100%;
+    padding: .5em 0;
+    position: fixed;
+	top: 0;
+}
+
+nav .global-nav__header-tuts-logo-link img {
+	width: 70px;
+	position: relative;
+	top: 5px;
+	margin-right: 20px;
+}
+
+/* translation links */
+span.translation {
+	cursor: pointer;
+	background: #eaeaea;
+	padding: .4em .8em;
+	margin: 0 .2em 0 0;
+	border-radius: 2px;
+	font-weight: bold;
+}
+span.translation:hover,
+span.selected {
+	background: #82b440;
+}
+
+/* label */
+.jvectormap-label { 
+	border: none;
+	background: #82b440;
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	border-radius: 2px;
+	padding: .4em .8em;
+}
