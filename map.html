@@ -13,7 +13,7 @@
   <style>
   /* Ian: Feel free to change anything in this style section */
   #world-map {
-    width: 650px;
+    width: 100%;
     height: 400px;
     position: relative;
   }
@@ -23,21 +23,20 @@
 <body>
   <!-- Ian: Feel free to add any HTML up here -->
 
-<header class="header-main">
-	<nav>
-	
-		<div class="wrapper">
-		
-			<a class="global-nav__header-tuts-logo-link" href="http://hub.tutsplus.com"><img alt="tuts+" class="global-nav__header-tuts-logo-image" data-cfsrc="tuts_logo.svg" src="theme/tuts_logo.svg"></a>  
-						
-			<!-- Don't remove this div, though! -->
-			<div id="world-map"></div>
-		
-		</div>
-	</nav>
 
+<nav>
+
+	<div class="wrapper">
 	
-</header>	
+		<a class="global-nav__header-tuts-logo-link" href="http://hub.tutsplus.com"><img alt="tuts+" class="global-nav__header-tuts-logo-image" data-cfsrc="tuts_logo.svg" src="theme/tuts_logo.svg"></a>  
+					
+		<!-- Don't remove this div, though! -->
+		<div id="world-map"></div>
+	
+	</div>
+</nav>
+
+
 
 
 	
@@ -46,7 +45,7 @@
 	var DESIGN = {
 	  minValue: 0,
 	  maxValue: 100,
-	  scale: ['#ffffff', '#82b440'],    // you can add intermediate colours
+	  scale: ['#ffffff', '#4c8500'],    // you can add intermediate colours
 	  backgroundColor: '#2a3744'
 	};
 	DESIGN.switchPost = function(post_id, language_code, title, instructor, url, translated_title, translator, translation_url) {
