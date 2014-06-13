@@ -70,7 +70,11 @@
 	
 	$.each(jvm.WorldMap.maps['world_mill_en'].paths, function(key, obj){
 	   //create new path entries, keyed by the country name
-	   countriesByName.paths[obj.name] = obj; 
+      	if (obj.name == 'United States of America') {
+        	countriesByName.paths['United States'] = obj;  // because Google Analytics calls it "United States" not "United States of America"
+      	} else {
+        	countriesByName.paths[obj.name] = obj; 
+      	}
 	});  
 	
 	//Add this new data map, to be loaded
