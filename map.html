@@ -57,8 +57,8 @@
 	DESIGN.switchPost = function(post_id, language_code, title, instructor, url, translated_title, translator, translation_url) {
 	  // This function is run whenever a different translation or post is selected, AFTER the map is changed
 	  // For the original (English) posts, translated_title, translator, and translation_url are the same as title, instructor, and url, respectively
-	
-	  
+		$('.translation').removeClass('selected');
+		$('.translation_' + String(post_id) + '.translation_' + language_code).addClass('selected');
 	}
 	/* Don't change any JS after here! */
 	
