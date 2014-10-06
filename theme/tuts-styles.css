@@ -148,6 +148,9 @@ span.selected:before {
 }
 
 /* flags */
+span.translation_ro:before { 	background: url(flags/ro.gif) no-repeat 0 0;	}
+span.translation_se:before { 	background: url(flags/se.gif) no-repeat 0 0;	}
+span.translation_nl:before { 	background: url(flags/nl.gif) no-repeat 0 0;	}
 span.translation_it:before { 	background: url(flags/it.gif) no-repeat 0 0;	}
 span.translation_bg:before { 	background: url(flags/bg.gif) no-repeat 0 0;	}
 span.translation_en:before { 	background: url(flags/gb.gif) no-repeat 0 0;	}
