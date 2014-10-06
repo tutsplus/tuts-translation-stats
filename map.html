@@ -55,11 +55,11 @@
 	  scale: ['#f0f8e6', '#4c8500'],    // you can add intermediate colours
 	  backgroundColor: '#2a3744'
 	};
-	DESIGN.switchPost = function(post_id, language_code, title, instructor, url, translated_title, translator, translation_url) {
+	DESIGN.switchPost = function(processed_post_id, language_code, title, instructor, url, translated_title, translator, translation_url) {
 	  // This function is run whenever a different translation or post is selected, AFTER the map is changed
 	  // For the original (English) posts, translated_title, translator, and translation_url are the same as title, instructor, and url, respectively
 		$('.translation').removeClass('selected');
-		$('.translation_' + String(post_id) + '.translation_' + language_code).addClass('selected');
+		$('.translation_' + String(processed_post_id) + '.translation_' + language_code).addClass('selected');
 	}
 	/* Don't change any JS after here! */
 	
@@ -86,7 +86,7 @@
 	    map: 'world_mill_en_byName',
 	    series: {
 	      regions: [{
-	        values: translationInfo[0]['traffic_percentage_by_country'],
+	        values: translationInfo[translationInfo.length - 1]['regions'],
 	        scale: DESIGN.scale,
 	        normalizeFunction: 'linear',
 	        min: DESIGN.minValue,
@@ -101,27 +101,27 @@
 	  mapObject.reset();
 	});
 	
-	function switchTranslation(post_id, lang) {
+	function switchTranslation(processed_post_id, lang) {
 	  mapObject.reset();
 	  mapObject.series.regions[0].scale.setMin(DESIGN.minValue);
 	  mapObject.series.regions[0].scale.setMax(DESIGN.maxValue);
 	  mapObject.series.regions[0].scale.setScale(DESIGN.scale);
 	  var post = {};
 	  for (var j = 0; j < translationInfo.length; j++) {
-	    if (translationInfo[j]['post_id'] === String(post_id)) {
+	    if (translationInfo[j]['processed_post_id'] === processed_post_id) {
 	      post = translationInfo[j];
 	    }
 	  }
 	
 	  if (lang == 'en') {
 	    mapObject.series.regions[0].setValues(post['traffic_percentage_by_country']);
-	    DESIGN.switchPost(post_id, lang, post['title'], post['instructor'], post['url'], post['title'], post['instructor'], post['url']);
+	    DESIGN.switchPost(processed_post_id, lang, post['title'], post['instructor'], post['url'], post['title'], post['instructor'], post['url']);
 	  } else {
 	    for (var i = 0; i < post['translations'].length; i++) {
 	      if (post['translations'][i]['language_code'] == lang) {
 	        selectedTranslation = post['translations'][i];
 	        mapObject.series.regions[0].setValues(selectedTranslation['traffic_percentage_by_country']);
-	        DESIGN.switchPost(post_id, lang, post['title'], post['instructor'], post['url'], selectedTranslation['title'], selectedTranslation['translator'], selectedTranslation['url']);
+	        DESIGN.switchPost(processed_post_id, lang, post['title'], post['instructor'], post['url'], selectedTranslation['title'], selectedTranslation['translator'], selectedTranslation['url']);
 	      }
 	    }
 	  }
@@ -130,7 +130,7 @@
 	
 	<!--
 	Ian: Feel free to change or remove any of this HTML; it's just to demonstrate how it all works.
-	The important thing is to call switchTranslation(post_id, language_code) at the appropriate point.
+	The important thing is to call switchTranslation(processed_post_id, language_code) at the appropriate point.
 	-->
 
 <section class="wrapper">	
@@ -138,377 +138,1243 @@
 	
 	<p>Each of the posts listed has been translated into one or more languages. Click on each language to see its relative distribution across the globe. Pale green across the board shows fairly equal traffic from all the countries where pageviews were recorded. Countries with a darker green account for a greater share of the traffic.</p>
 
-	<div class="post post_9203">
-	<h2 class="post_title post_title_9203">
-	    <a href="https://webdesign.tutsplus.com/articles/a-beginners-guide-to-wireframing--webdesign-7399">A Beginner's Guide to Wireframing</a>
-	</h2>
-	<div class="translations translations_9203">
-	    <span class='translation translation_9203 translation_en' onclick='switchTranslation(9203, "en")'>en</span> <span class='translation translation_9203 translation_es' onclick='switchTranslation(9203, "es")'>es</span> <span class='translation translation_9203 translation_de' onclick='switchTranslation(9203, "de")'>de</span> <span class='translation translation_9203 translation_fr' onclick='switchTranslation(9203, "fr")'>fr</span> <span class='translation translation_9203 translation_zh-hans' onclick='switchTranslation(9203, "zh-hans")'>zh-hans</span> <span class='translation translation_9203 translation_pt' onclick='switchTranslation(9203, "pt")'>pt</span>
-	</div>
-	</div>
-		    
-	<div class="post post_8934">
-	<h2 class="post_title post_title_8934">
-	    <a href="https://webdesign.tutsplus.com/articles/an-introduction-to-seo--webdesign-9408">An Introduction to SEO</a>
-	</h2>
-	<div class="translations translations_8934">
-	    <span class='translation translation_8934 translation_en' onclick='switchTranslation(8934, "en")'>en</span> <span class='translation translation_8934 translation_de' onclick='switchTranslation(8934, "de")'>de</span> <span class='translation translation_8934 translation_es' onclick='switchTranslation(8934, "es")'>es</span>
-	</div>
-	</div>
-		    
-	<div class="post post_15309">
-	<h2 class="post_title post_title_15309">
-	    <a href="https://webdesign.tutsplus.com/articles/creating-a-simple-responsive-html-email--webdesign-12978">Creating a Simple Responsive HTML Email</a>
-	</h2>
-	<div class="translations translations_15309">
-	    <span class='translation translation_15309 translation_en' onclick='switchTranslation(15309, "en")'>en</span> <span class='translation translation_15309 translation_es' onclick='switchTranslation(15309, "es")'>es</span> <span class='translation translation_15309 translation_zh-hans' onclick='switchTranslation(15309, "zh-hans")'>zh-hans</span> <span class='translation translation_15309 translation_ru' onclick='switchTranslation(15309, "ru")'>ru</span> <span class='translation translation_15309 translation_id' onclick='switchTranslation(15309, "id")'>id</span> <span class='translation translation_15309 translation_fr' onclick='switchTranslation(15309, "fr")'>fr</span> <span class='translation translation_15309 translation_de' onclick='switchTranslation(15309, "de")'>de</span>
-	</div>
-	</div>
-		    
-	<div class="post post_18810">
-	<h2 class="post_title post_title_18810">
-	    <a href="https://webdesign.tutsplus.com/articles/simple-visual-enhancements-for-better-coding-in-sublime-text--webdesign-18052">Simple Visual Enhancements for Better Coding in Sublime Text</a>
-	</h2>
-	<div class="translations translations_18810">
-	    <span class='translation translation_18810 translation_en' onclick='switchTranslation(18810, "en")'>en</span> <span class='translation translation_18810 translation_id' onclick='switchTranslation(18810, "id")'>id</span> <span class='translation translation_18810 translation_tr' onclick='switchTranslation(18810, "tr")'>tr</span> <span class='translation translation_18810 translation_es' onclick='switchTranslation(18810, "es")'>es</span> <span class='translation translation_18810 translation_ru' onclick='switchTranslation(18810, "ru")'>ru</span> <span class='translation translation_18810 translation_de' onclick='switchTranslation(18810, "de")'>de</span> <span class='translation translation_18810 translation_pt' onclick='switchTranslation(18810, "pt")'>pt</span>
-	</div>
-	</div>
-	    	
-	<div class="post post_3481">
-	<h2 class="post_title post_title_3481">
-	    <a href="https://webdesign.tutsplus.com/tutorials/9-sketch-features-you-should-be-using--webdesign-18016">9 Sketch Features You Should be Using</a>
-	</h2>
-	<div class="translations translations_3481">
-	    <span class='translation translation_3481 translation_en' onclick='switchTranslation(3481, "en")'>en</span> <span class='translation translation_3481 translation_zh-hant' onclick='switchTranslation(3481, "zh-hant")'>zh-hant</span> <span class='translation translation_3481 translation_pt' onclick='switchTranslation(3481, "pt")'>pt</span> <span class='translation translation_3481 translation_id' onclick='switchTranslation(3481, "id")'>id</span>
-	</div>
-	</div>	    
 
-	<div class="post post_2996">
-	<h2 class="post_title post_title_2996">
-	    <a href="https://computers.tutsplus.com/tutorials/what-to-do-when-your-macs-startup-disk-is-almost-full--mac-31780">What To Do When Your Mac's Startup Disk is Almost Full</a>
-	</h2>
-	<div class="translations translations_2996">
-	    <span class='translation translation_2996 translation_en' onclick='switchTranslation(2996, "en")'>en</span> <span class='translation translation_2996 translation_pt' onclick='switchTranslation(2996, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_3242">
-	<h2 class="post_title post_title_3242">
-	    <a href="https://crafts.tutsplus.com/tutorials/how-to-decorate-a-coffee-mug-using-a-porcelain-marker--craft-7454">How to Decorate a Coffee Mug Using a Porcelain Marker</a>
-	</h2>
-	<div class="translations translations_3242">
-	    <span class='translation translation_3242 translation_en' onclick='switchTranslation(3242, "en")'>en</span> <span class='translation translation_3242 translation_es' onclick='switchTranslation(3242, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_4352">
-	<h2 class="post_title post_title_4352">
-	    <a href="https://computers.tutsplus.com/tutorials/10-terminal-commands-that-every-mac-user-should-know--mac-4825">10 Terminal Commands That Every Mac User Should Know</a>
-	</h2>
-	<div class="translations translations_4352">
-	    <span class='translation translation_4352 translation_en' onclick='switchTranslation(4352, "en")'>en</span> <span class='translation translation_4352 translation_de' onclick='switchTranslation(4352, "de")'>de</span>
-	</div>
-	</div>
-	    
-	<div class="post post_4962">
-	<h2 class="post_title post_title_4962">
-	    <a href="https://webdesign.tutsplus.com/articles/a-simple-responsive-mobile-first-navigation--webdesign-6074">A Simple, Responsive, Mobile First Navigation</a>
-	</h2>
-	<div class="translations translations_4962">
-	    <span class='translation translation_4962 translation_en' onclick='switchTranslation(4962, "en")'>en</span> <span class='translation translation_4962 translation_pt' onclick='switchTranslation(4962, "pt")'>pt</span> <span class='translation translation_4962 translation_zh-hant' onclick='switchTranslation(4962, "zh-hant")'>zh-hant</span> <span class='translation translation_4962 translation_ru' onclick='switchTranslation(4962, "ru")'>ru</span>
-	</div>
-	</div>
-	    
-	<div class="post post_7408">
-	<h2 class="post_title post_title_7408">
-	    <a href="https://webdesign.tutsplus.com/tutorials/bring-your-forms-up-to-date-with-css3-and-html5-validation--webdesign-4738">Bring Your Forms Up to Date With CSS3 and HTML5 Validation</a>
-	</h2>
-	<div class="translations translations_7408">
-	    <span class='translation translation_7408 translation_en' onclick='switchTranslation(7408, "en")'>en</span> <span class='translation translation_7408 translation_pt' onclick='switchTranslation(7408, "pt")'>pt</span> <span class='translation translation_7408 translation_zh-hans' onclick='switchTranslation(7408, "zh-hans")'>zh-hans</span> <span class='translation translation_7408 translation_es' onclick='switchTranslation(7408, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_7991">
-	<h2 class="post_title post_title_7991">
-	    <a href="https://webdesign.tutsplus.com/articles/principles-for-successful-button-design--webdesign-6094">Principles for Successful Button Design </a>
-	</h2>
-	<div class="translations translations_7991">
-	    <span class='translation translation_7991 translation_en' onclick='switchTranslation(7991, "en")'>en</span> <span class='translation translation_7991 translation_ru' onclick='switchTranslation(7991, "ru")'>ru</span> <span class='translation translation_7991 translation_tr' onclick='switchTranslation(7991, "tr")'>tr</span> <span class='translation translation_7991 translation_zh-hans' onclick='switchTranslation(7991, "zh-hans")'>zh-hans</span> <span class='translation translation_7991 translation_fr' onclick='switchTranslation(7991, "fr")'>fr</span> <span class='translation translation_7991 translation_hu' onclick='switchTranslation(7991, "hu")'>hu</span> <span class='translation translation_7991 translation_es' onclick='switchTranslation(7991, "es")'>es</span> <span class='translation translation_7991 translation_id' onclick='switchTranslation(7991, "id")'>id</span> <span class='translation translation_7991 translation_pt' onclick='switchTranslation(7991, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_8624">
-	<h2 class="post_title post_title_8624">
-	    <a href="https://webdesign.tutsplus.com/articles/a-beginners-guide-to-pairing-fonts--webdesign-5706">A Beginner's Guide to Pairing Fonts</a>
-	</h2>
-	<div class="translations translations_8624">
-	    <span class='translation translation_8624 translation_en' onclick='switchTranslation(8624, "en")'>en</span> <span class='translation translation_8624 translation_fr' onclick='switchTranslation(8624, "fr")'>fr</span> <span class='translation translation_8624 translation_pt' onclick='switchTranslation(8624, "pt")'>pt</span> <span class='translation translation_8624 translation_es' onclick='switchTranslation(8624, "es")'>es</span> <span class='translation translation_8624 translation_pl' onclick='switchTranslation(8624, "pl")'>pl</span> <span class='translation translation_8624 translation_id' onclick='switchTranslation(8624, "id")'>id</span>
-	</div>
-	</div>
-	    
-	<div class="post post_9386">
-	<h2 class="post_title post_title_9386">
-	    <a href="https://webdesign.tutsplus.com/articles/build-an-html-email-template-from-scratch--webdesign-12770">Build an HTML Email Template From Scratch</a>
-	</h2>
-	<div class="translations translations_9386">
-	    <span class='translation translation_9386 translation_en' onclick='switchTranslation(9386, "en")'>en</span> <span class='translation translation_9386 translation_es' onclick='switchTranslation(9386, "es")'>es</span> <span class='translation translation_9386 translation_id' onclick='switchTranslation(9386, "id")'>id</span>
-	</div>
-	</div>
-	    
-	<div class="post post_9500">
-	<h2 class="post_title post_title_9500">
-	    <a href="https://webdesign.tutsplus.com/tutorials/build-a-modular-dashboard-interface-with-pure--webdesign-13314">Build a Modular Dashboard Interface With Pure</a>
-	</h2>
-	<div class="translations translations_9500">
-	    <span class='translation translation_9500 translation_en' onclick='switchTranslation(9500, "en")'>en</span> <span class='translation translation_9500 translation_ru' onclick='switchTranslation(9500, "ru")'>ru</span> <span class='translation translation_9500 translation_fr' onclick='switchTranslation(9500, "fr")'>fr</span> <span class='translation translation_9500 translation_id' onclick='switchTranslation(9500, "id")'>id</span> <span class='translation translation_9500 translation_pt' onclick='switchTranslation(9500, "pt")'>pt</span> <span class='translation translation_9500 translation_es' onclick='switchTranslation(9500, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_10042">
-	<h2 class="post_title post_title_10042">
-	    <a href="https://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972">Quick Tip: Don't Forget the Viewport Meta Tag</a>
-	</h2>
-	<div class="translations translations_10042">
-	    <span class='translation translation_10042 translation_en' onclick='switchTranslation(10042, "en")'>en</span> <span class='translation translation_10042 translation_id' onclick='switchTranslation(10042, "id")'>id</span> <span class='translation translation_10042 translation_fr' onclick='switchTranslation(10042, "fr")'>fr</span> <span class='translation translation_10042 translation_zh-hans' onclick='switchTranslation(10042, "zh-hans")'>zh-hans</span> <span class='translation translation_10042 translation_es' onclick='switchTranslation(10042, "es")'>es</span> <span class='translation translation_10042 translation_de' onclick='switchTranslation(10042, "de")'>de</span> <span class='translation translation_10042 translation_pt' onclick='switchTranslation(10042, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_10921">
-	<h2 class="post_title post_title_10921">
-	    <a href="https://cgi.tutsplus.com/tutorials/creating-a-low-poly-ninja-game-character-using-blender-part-1--cg-16132">Creating A Low Poly Ninja Game Character Using Blender: Part 1</a>
-	</h2>
-	<div class="translations translations_10921">
-	    <span class='translation translation_10921 translation_en' onclick='switchTranslation(10921, "en")'>en</span> <span class='translation translation_10921 translation_es' onclick='switchTranslation(10921, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_12084">
-	<h2 class="post_title post_title_12084">
-	    <a href="https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048">The 30 CSS Selectors you Must Memorize</a>
-	</h2>
-	<div class="translations translations_12084">
-	    <span class='translation translation_12084 translation_en' onclick='switchTranslation(12084, "en")'>en</span> <span class='translation translation_12084 translation_es' onclick='switchTranslation(12084, "es")'>es</span> <span class='translation translation_12084 translation_ru' onclick='switchTranslation(12084, "ru")'>ru</span> <span class='translation translation_12084 translation_fr' onclick='switchTranslation(12084, "fr")'>fr</span> <span class='translation translation_12084 translation_id' onclick='switchTranslation(12084, "id")'>id</span>
-	</div>
-	</div>
-	    
-	<div class="post post_12357">
-	<h2 class="post_title post_title_12357">
-	    <a href="https://code.tutsplus.com/tutorials/28-html5-features-tips-and-techniques-you-must-know--net-13520">28 HTML5 Features, Tips, and Techniques you Must Know</a>
-	</h2>
-	<div class="translations translations_12357">
-	    <span class='translation translation_12357 translation_en' onclick='switchTranslation(12357, "en")'>en</span> <span class='translation translation_12357 translation_ru' onclick='switchTranslation(12357, "ru")'>ru</span>
-	</div>
-	</div>
-	    
-	<div class="post post_12833">
-	<h2 class="post_title post_title_12833">
-	    <a href="https://code.tutsplus.com/tutorials/quick-tip-jquery-newbs-stop-jumping-in-the-pool--net-22142">Quick Tip - jQuery Newbs: Stop Jumping in the Pool</a>
-	</h2>
-	<div class="translations translations_12833">
-	    <span class='translation translation_12833 translation_en' onclick='switchTranslation(12833, "en")'>en</span> <span class='translation translation_12833 translation_de' onclick='switchTranslation(12833, "de")'>de</span> <span class='translation translation_12833 translation_es' onclick='switchTranslation(12833, "es")'>es</span> <span class='translation translation_12833 translation_pt' onclick='switchTranslation(12833, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_13323">
-	<h2 class="post_title post_title_13323">
-	    <a href="https://code.tutsplus.com/tutorials/object-oriented-php-for-beginners--net-12762">Object-Oriented PHP for Beginners</a>
-	</h2>
-	<div class="translations translations_13323">
-	    <span class='translation translation_13323 translation_en' onclick='switchTranslation(13323, "en")'>en</span> <span class='translation translation_13323 translation_pt' onclick='switchTranslation(13323, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_13976">
-	<h2 class="post_title post_title_13976">
-	    <a href="https://code.tutsplus.com/tutorials/understanding-hash-functions-and-keeping-passwords-safe--net-17577">Understanding Hash Functions and Keeping Passwords Safe</a>
-	</h2>
-	<div class="translations translations_13976">
-	    <span class='translation translation_13976 translation_en' onclick='switchTranslation(13976, "en")'>en</span> <span class='translation translation_13976 translation_pt' onclick='switchTranslation(13976, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_14409">
-	<h2 class="post_title post_title_14409">
-	    <a href="https://code.tutsplus.com/tutorials/pdo-vs-mysqli-which-should-you-use--net-24059">PDO vs. MySQLi: Which Should You Use?</a>
-	</h2>
-	<div class="translations translations_14409">
-	    <span class='translation translation_14409 translation_en' onclick='switchTranslation(14409, "en")'>en</span> <span class='translation translation_14409 translation_pt' onclick='switchTranslation(14409, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_14417">
-	<h2 class="post_title post_title_14417">
-	    <a href="https://code.tutsplus.com/tutorials/why-you-should-be-using-phps-pdo-for-database-access--net-12059">Why you Should be using PHP's PDO for Database Access</a>
-	</h2>
-	<div class="translations translations_14417">
-	    <span class='translation translation_14417 translation_en' onclick='switchTranslation(14417, "en")'>en</span> <span class='translation translation_14417 translation_pt' onclick='switchTranslation(14417, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_14540">
-	<h2 class="post_title post_title_14540">
-	    <a href="https://design.tutsplus.com/tutorials/illustrators-type-tool-a-comprehensive-introduction--vector-521">Illustrator's Type Tool: A Comprehensive Introduction</a>
-	</h2>
-	<div class="translations translations_14540">
-	    <span class='translation translation_14540 translation_en' onclick='switchTranslation(14540, "en")'>en</span> <span class='translation translation_14540 translation_ru' onclick='switchTranslation(14540, "ru")'>ru</span>
-	</div>
-	</div>
-	    
-	<div class="post post_14943">
-	<h2 class="post_title post_title_14943">
-	    <a href="https://photography.tutsplus.com/tutorials/7-posing-techniques-for-non-models--photo-15608">7 Posing Techniques for Non-Models</a>
-	</h2>
-	<div class="translations translations_14943">
-	    <span class='translation translation_14943 translation_en' onclick='switchTranslation(14943, "en")'>en</span> <span class='translation translation_14943 translation_zh-hans' onclick='switchTranslation(14943, "zh-hans")'>zh-hans</span> <span class='translation translation_14943 translation_es' onclick='switchTranslation(14943, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_14973">
-	<h2 class="post_title post_title_14973">
-	    <a href="https://design.tutsplus.com/tutorials/create-a-sparkly-female-portrait-in-illustrator--vector-4408">Create a Sparkly Female Portrait in Illustrator</a>
-	</h2>
-	<div class="translations translations_14973">
-	    <span class='translation translation_14973 translation_en' onclick='switchTranslation(14973, "en")'>en</span> <span class='translation translation_14973 translation_es' onclick='switchTranslation(14973, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_15073">
-	<h2 class="post_title post_title_15073">
-	    <a href="https://photography.tutsplus.com/articles/100-free-photoshop-actions-and-how-to-make-your-own--photo-3502">100 Free Photoshop Actions (And How to Make Your Own)</a>
-	</h2>
-	<div class="translations translations_15073">
-	    <span class='translation translation_15073 translation_en' onclick='switchTranslation(15073, "en")'>en</span> <span class='translation translation_15073 translation_es' onclick='switchTranslation(15073, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_15081">
-	<h2 class="post_title post_title_15081">
-	    <a href="https://photography.tutsplus.com/articles/100-free-lightroom-presets-and-how-to-make-your-own--photo-8640">100 Free Lightroom Presets (And How to Make Your Own)</a>
-	</h2>
-	<div class="translations translations_15081">
-	    <span class='translation translation_15081 translation_en' onclick='switchTranslation(15081, "en")'>en</span> <span class='translation translation_15081 translation_es' onclick='switchTranslation(15081, "es")'>es</span>
-	</div>
-	</div>
-
-	<div class="post post_16264">
-	<h2 class="post_title post_title_16264">
-	    <a href="https://code.tutsplus.com/tutorials/laravel-4-a-start-at-a-restful-api-updated--net-29785">Laravel 4: A Start at a RESTful API (Updated)</a>
-	</h2>
-	<div class="translations translations_16264">
-	    <span class='translation translation_16264 translation_en' onclick='switchTranslation(16264, "en")'>en</span> <span class='translation translation_16264 translation_pt' onclick='switchTranslation(16264, "pt")'>pt</span> <span class='translation translation_16264 translation_fr' onclick='switchTranslation(16264, "fr")'>fr</span>
-	</div>
-	</div>
-	    
-	<div class="post post_17047">
-	<h2 class="post_title post_title_17047">
-	    <a href="https://design.tutsplus.com/tutorials/creating-a-simple-kawaii-yeti-with-basic-shapes-in-adobe-illustrator--vector-10738">Creating a Simple Kawaii Yeti With Basic Shapes in Adobe Illustrator</a>
-	</h2>
-	<div class="translations translations_17047">
-	    <span class='translation translation_17047 translation_en' onclick='switchTranslation(17047, "en")'>en</span> <span class='translation translation_17047 translation_zh-hans' onclick='switchTranslation(17047, "zh-hans")'>zh-hans</span> <span class='translation translation_17047 translation_es' onclick='switchTranslation(17047, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_17094">
-	<h2 class="post_title post_title_17094">
-	    <a href="https://design.tutsplus.com/articles/capture-colors-with-the-adobe-kuler-app-for-the-iphone--vector-12494">Capture Colors With the Adobe Kuler App for the iPhone</a>
-	</h2>
-	<div class="translations translations_17094">
-	    <span class='translation translation_17094 translation_en' onclick='switchTranslation(17094, "en")'>en</span> <span class='translation translation_17094 translation_es' onclick='switchTranslation(17094, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_17141">
-	<h2 class="post_title post_title_17141">
-	    <a href="https://design.tutsplus.com/tutorials/illustrators-pen-tool-the-comprehensive-guide--vector-141">Illustrator's Pen Tool: The Comprehensive Guide</a>
-	</h2>
-	<div class="translations translations_17141">
-	    <span class='translation translation_17141 translation_en' onclick='switchTranslation(17141, "en")'>en</span> <span class='translation translation_17141 translation_es' onclick='switchTranslation(17141, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_17182">
-	<h2 class="post_title post_title_17182">
-	    <a href="https://design.tutsplus.com/tutorials/create-a-cute-and-simple-panda-with-basic-shapes-in-adobe-illustrator--vector-14203">Create a Cute and Simple Panda With Basic Shapes in Adobe Illustrator</a>
-	</h2>
-	<div class="translations translations_17182">
-	    <span class='translation translation_17182 translation_en' onclick='switchTranslation(17182, "en")'>en</span> <span class='translation translation_17182 translation_es' onclick='switchTranslation(17182, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_18959">
-	<h2 class="post_title post_title_18959">
-	    <a href="https://code.tutsplus.com/tutorials/testing-laravel-controllers--net-31456">Testing Laravel Controllers</a>
-	</h2>
-	<div class="translations translations_18959">
-	    <span class='translation translation_18959 translation_en' onclick='switchTranslation(18959, "en")'>en</span> <span class='translation translation_18959 translation_pt' onclick='switchTranslation(18959, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_19034">
-	<h2 class="post_title post_title_19034">
-	    <a href="https://code.tutsplus.com/tutorials/bdd-with-behat--net-36171">BDD With Behat</a>
-	</h2>
-	<div class="translations translations_19034">
-	    <span class='translation translation_19034 translation_en' onclick='switchTranslation(19034, "en")'>en</span> <span class='translation translation_19034 translation_pt' onclick='switchTranslation(19034, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_19073">
-	<h2 class="post_title post_title_19073">
-	    <a href="https://computers.tutsplus.com/tutorials/how-to-use-vpn-on-your-mac--mac-46053">How to Use VPN on Your Mac</a>
-	</h2>
-	<div class="translations translations_19073">
-	    <span class='translation translation_19073 translation_en' onclick='switchTranslation(19073, "en")'>en</span> <span class='translation translation_19073 translation_pt' onclick='switchTranslation(19073, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_19353">
-	<h2 class="post_title post_title_19353">
-	    <a href="https://code.tutsplus.com/articles/quick-tip-restore-admin-menu-separators--wp-34850">Quick Tip: Restore Admin Menu Separators</a>
-	</h2>
-	<div class="translations translations_19353">
-	    <span class='translation translation_19353 translation_en' onclick='switchTranslation(19353, "en")'>en</span> <span class='translation translation_19353 translation_de' onclick='switchTranslation(19353, "de")'>de</span>
-	</div>
-	</div>
-	    
-	<div class="post post_19444">
-	<h2 class="post_title post_title_19444">
-	    <a href="https://webdesign.tutsplus.com/articles/9-quick-wins-for-halfway-decent-design--cms-19444">9 Quick Wins for Halfway-Decent Design</a>
-	</h2>
-	<div class="translations translations_19444">
-	    <span class='translation translation_19444 translation_en' onclick='switchTranslation(19444, "en")'>en</span> <span class='translation translation_19444 translation_de' onclick='switchTranslation(19444, "de")'>de</span> <span class='translation translation_19444 translation_pt' onclick='switchTranslation(19444, "pt")'>pt</span> <span class='translation translation_19444 translation_id' onclick='switchTranslation(19444, "id")'>id</span> <span class='translation translation_19444 translation_fr' onclick='switchTranslation(19444, "fr")'>fr</span> <span class='translation translation_19444 translation_es' onclick='switchTranslation(19444, "es")'>es</span>
-	</div>
-	</div>
-	    
-	<div class="post post_19952">
-	<h2 class="post_title post_title_19952">
-	    <a href="https://code.tutsplus.com/tutorials/laravel-unwrapped-session-auth-and-cache--cms-19952">Laravel Unwrapped: Session, Auth and Cache</a>
-	</h2>
-	<div class="translations translations_19952">
-	    <span class='translation translation_19952 translation_en' onclick='switchTranslation(19952, "en")'>en</span> <span class='translation translation_19952 translation_pt' onclick='switchTranslation(19952, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_20827">
-	<h2 class="post_title post_title_20827">
-	    <a href="https://design.tutsplus.com/tutorials/create-a-retro-footballer-in-adobe-illustrator-for-the-world-cup--cms-20827">Create a Retro Footballer in Adobe Illustrator for the World Cup</a>
-	</h2>
-	<div class="translations translations_20827">
-	    <span class='translation translation_20827 translation_en' onclick='switchTranslation(20827, "en")'>en</span> <span class='translation translation_20827 translation_pt' onclick='switchTranslation(20827, "pt")'>pt</span>
-	</div>
-	</div>
-	    
-	<div class="post post_20919">
-	<h2 class="post_title post_title_20919">
-	    <a href="https://code.tutsplus.com/tutorials/getting-started-with-phpspec--cms-20919">Getting Started With Phpspec</a>
-	</h2>
-	<div class="translations translations_20919">
-	    <span class='translation translation_20919 translation_en' onclick='switchTranslation(20919, "en")'>en</span> <span class='translation translation_20919 translation_pt' onclick='switchTranslation(20919, "pt")'>pt</span>
-	</div>
-	</div>
+<div class="post post_27620">
+<h2 class="post_title post_title_27620">
+    <a href="https://webdesign.tutsplus.com/articles/principles-for-successful-button-design--webdesign-6094">Principles for Successful Button Design </a>
+</h2>
+<div class="translations translations_27620">
+    <span class='translation translation_27620 translation_en' onclick='switchTranslation(27620, "en")'>en</span> <span class='translation translation_27620 translation_tr' onclick='switchTranslation(27620, "tr")'>tr</span> <span class='translation translation_27620 translation_es' onclick='switchTranslation(27620, "es")'>es</span> <span class='translation translation_27620 translation_fr' onclick='switchTranslation(27620, "fr")'>fr</span> <span class='translation translation_27620 translation_id' onclick='switchTranslation(27620, "id")'>id</span> <span class='translation translation_27620 translation_pt' onclick='switchTranslation(27620, "pt")'>pt</span> <span class='translation translation_27620 translation_ru' onclick='switchTranslation(27620, "ru")'>ru</span> <span class='translation translation_27620 translation_hu' onclick='switchTranslation(27620, "hu")'>hu</span> <span class='translation translation_27620 translation_zh-hans' onclick='switchTranslation(27620, "zh-hans")'>zh-hans</span>
+</div>
+</div>
+    
+<div class="post post_38435">
+<h2 class="post_title post_title_38435">
+    <a href="https://webdesign.tutsplus.com/articles/simple-visual-enhancements-for-better-coding-in-sublime-text--webdesign-18052">Simple Visual Enhancements for Better Coding in Sublime Text</a>
+</h2>
+<div class="translations translations_38435">
+    <span class='translation translation_38435 translation_en' onclick='switchTranslation(38435, "en")'>en</span> <span class='translation translation_38435 translation_es' onclick='switchTranslation(38435, "es")'>es</span> <span class='translation translation_38435 translation_zh-hans' onclick='switchTranslation(38435, "zh-hans")'>zh-hans</span> <span class='translation translation_38435 translation_tr' onclick='switchTranslation(38435, "tr")'>tr</span> <span class='translation translation_38435 translation_ru' onclick='switchTranslation(38435, "ru")'>ru</span> <span class='translation translation_38435 translation_pt' onclick='switchTranslation(38435, "pt")'>pt</span> <span class='translation translation_38435 translation_id' onclick='switchTranslation(38435, "id")'>id</span> <span class='translation translation_38435 translation_fr' onclick='switchTranslation(38435, "fr")'>fr</span> <span class='translation translation_38435 translation_de' onclick='switchTranslation(38435, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_41372">
+<h2 class="post_title post_title_41372">
+    <a href="https://webdesign.tutsplus.com/tutorials/get-started-building-your-blog-with-parsejs--cms-21997">Get Started Building Your Blog with Parse.js</a>
+</h2>
+<div class="translations translations_41372">
+    <span class='translation translation_41372 translation_en' onclick='switchTranslation(41372, "en")'>en</span> <span class='translation translation_41372 translation_zh-hant' onclick='switchTranslation(41372, "zh-hant")'>zh-hant</span> <span class='translation translation_41372 translation_zh-hant' onclick='switchTranslation(41372, "zh-hant")'>zh-hant</span> <span class='translation translation_41372 translation_zh-hans' onclick='switchTranslation(41372, "zh-hans")'>zh-hans</span> <span class='translation translation_41372 translation_fr' onclick='switchTranslation(41372, "fr")'>fr</span> <span class='translation translation_41372 translation_fr' onclick='switchTranslation(41372, "fr")'>fr</span> <span class='translation translation_41372 translation_zh-hans' onclick='switchTranslation(41372, "zh-hans")'>zh-hans</span> <span class='translation translation_41372 translation_es' onclick='switchTranslation(41372, "es")'>es</span> <span class='translation translation_41372 translation_es' onclick='switchTranslation(41372, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41471">
+<h2 class="post_title post_title_41471">
+    <a href="https://webdesign.tutsplus.com/tutorials/the-holy-grail-of-css-centering--cms-22114">The Holy Grail of CSS Centering</a>
+</h2>
+<div class="translations translations_41471">
+    <span class='translation translation_41471 translation_en' onclick='switchTranslation(41471, "en")'>en</span> <span class='translation translation_41471 translation_it' onclick='switchTranslation(41471, "it")'>it</span> <span class='translation translation_41471 translation_de' onclick='switchTranslation(41471, "de")'>de</span> <span class='translation translation_41471 translation_ru' onclick='switchTranslation(41471, "ru")'>ru</span> <span class='translation translation_41471 translation_bg' onclick='switchTranslation(41471, "bg")'>bg</span> <span class='translation translation_41471 translation_es' onclick='switchTranslation(41471, "es")'>es</span> <span class='translation translation_41471 translation_nl' onclick='switchTranslation(41471, "nl")'>nl</span> <span class='translation translation_41471 translation_fr' onclick='switchTranslation(41471, "fr")'>fr</span> <span class='translation translation_41471 translation_pt' onclick='switchTranslation(41471, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34935">
+<h2 class="post_title post_title_34935">
+    <a href="https://webdesign.tutsplus.com/articles/creating-a-simple-responsive-html-email--webdesign-12978">Creating a Simple Responsive HTML Email</a>
+</h2>
+<div class="translations translations_34935">
+    <span class='translation translation_34935 translation_en' onclick='switchTranslation(34935, "en")'>en</span> <span class='translation translation_34935 translation_zh-hans' onclick='switchTranslation(34935, "zh-hans")'>zh-hans</span> <span class='translation translation_34935 translation_de' onclick='switchTranslation(34935, "de")'>de</span> <span class='translation translation_34935 translation_fr' onclick='switchTranslation(34935, "fr")'>fr</span> <span class='translation translation_34935 translation_ru' onclick='switchTranslation(34935, "ru")'>ru</span> <span class='translation translation_34935 translation_pt' onclick='switchTranslation(34935, "pt")'>pt</span> <span class='translation translation_34935 translation_id' onclick='switchTranslation(34935, "id")'>id</span> <span class='translation translation_34935 translation_es' onclick='switchTranslation(34935, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_28253">
+<h2 class="post_title post_title_28253">
+    <a href="https://webdesign.tutsplus.com/articles/a-beginners-guide-to-pairing-fonts--webdesign-5706">A Beginner’s Guide to Pairing Fonts</a>
+</h2>
+<div class="translations translations_28253">
+    <span class='translation translation_28253 translation_en' onclick='switchTranslation(28253, "en")'>en</span> <span class='translation translation_28253 translation_es' onclick='switchTranslation(28253, "es")'>es</span> <span class='translation translation_28253 translation_zh-hans' onclick='switchTranslation(28253, "zh-hans")'>zh-hans</span> <span class='translation translation_28253 translation_id' onclick='switchTranslation(28253, "id")'>id</span> <span class='translation translation_28253 translation_fr' onclick='switchTranslation(28253, "fr")'>fr</span> <span class='translation translation_28253 translation_pt' onclick='switchTranslation(28253, "pt")'>pt</span> <span class='translation translation_28253 translation_pl' onclick='switchTranslation(28253, "pl")'>pl</span>
+</div>
+</div>
+    
+<div class="post post_29671">
+<h2 class="post_title post_title_29671">
+    <a href="https://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972">Quick Tip: Don't Forget the Viewport Meta Tag</a>
+</h2>
+<div class="translations translations_29671">
+    <span class='translation translation_29671 translation_en' onclick='switchTranslation(29671, "en")'>en</span> <span class='translation translation_29671 translation_de' onclick='switchTranslation(29671, "de")'>de</span> <span class='translation translation_29671 translation_zh-hans' onclick='switchTranslation(29671, "zh-hans")'>zh-hans</span> <span class='translation translation_29671 translation_id' onclick='switchTranslation(29671, "id")'>id</span> <span class='translation translation_29671 translation_fr' onclick='switchTranslation(29671, "fr")'>fr</span> <span class='translation translation_29671 translation_es' onclick='switchTranslation(29671, "es")'>es</span> <span class='translation translation_29671 translation_pt' onclick='switchTranslation(29671, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_31711">
+<h2 class="post_title post_title_31711">
+    <a href="https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048">The 30 CSS Selectors you Must Memorize</a>
+</h2>
+<div class="translations translations_31711">
+    <span class='translation translation_31711 translation_en' onclick='switchTranslation(31711, "en")'>en</span> <span class='translation translation_31711 translation_id' onclick='switchTranslation(31711, "id")'>id</span> <span class='translation translation_31711 translation_pt' onclick='switchTranslation(31711, "pt")'>pt</span> <span class='translation translation_31711 translation_es' onclick='switchTranslation(31711, "es")'>es</span> <span class='translation translation_31711 translation_ru' onclick='switchTranslation(31711, "ru")'>ru</span> <span class='translation translation_31711 translation_fr' onclick='switchTranslation(31711, "fr")'>fr</span> <span class='translation translation_31711 translation_zh-hans' onclick='switchTranslation(31711, "zh-hans")'>zh-hans</span>
+</div>
+</div>
+    
+<div class="post post_24592">
+<h2 class="post_title post_title_24592">
+    <a href="https://webdesign.tutsplus.com/articles/a-simple-responsive-mobile-first-navigation--webdesign-6074">A Simple, Responsive, Mobile First Navigation</a>
+</h2>
+<div class="translations translations_24592">
+    <span class='translation translation_24592 translation_en' onclick='switchTranslation(24592, "en")'>en</span> <span class='translation translation_24592 translation_es' onclick='switchTranslation(24592, "es")'>es</span> <span class='translation translation_24592 translation_zh-hant' onclick='switchTranslation(24592, "zh-hant")'>zh-hant</span> <span class='translation translation_24592 translation_fr' onclick='switchTranslation(24592, "fr")'>fr</span> <span class='translation translation_24592 translation_pt' onclick='switchTranslation(24592, "pt")'>pt</span> <span class='translation translation_24592 translation_ru' onclick='switchTranslation(24592, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_28832">
+<h2 class="post_title post_title_28832">
+    <a href="https://webdesign.tutsplus.com/articles/a-beginners-guide-to-wireframing--webdesign-7399">A Beginner’s Guide to Wireframing</a>
+</h2>
+<div class="translations translations_28832">
+    <span class='translation translation_28832 translation_en' onclick='switchTranslation(28832, "en")'>en</span> <span class='translation translation_28832 translation_pt' onclick='switchTranslation(28832, "pt")'>pt</span> <span class='translation translation_28832 translation_de' onclick='switchTranslation(28832, "de")'>de</span> <span class='translation translation_28832 translation_zh-hans' onclick='switchTranslation(28832, "zh-hans")'>zh-hans</span> <span class='translation translation_28832 translation_fr' onclick='switchTranslation(28832, "fr")'>fr</span> <span class='translation translation_28832 translation_es' onclick='switchTranslation(28832, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_29129">
+<h2 class="post_title post_title_29129">
+    <a href="https://webdesign.tutsplus.com/tutorials/build-a-modular-dashboard-interface-with-pure--webdesign-13314">Build a Modular Dashboard Interface With Pure</a>
+</h2>
+<div class="translations translations_29129">
+    <span class='translation translation_29129 translation_en' onclick='switchTranslation(29129, "en")'>en</span> <span class='translation translation_29129 translation_ru' onclick='switchTranslation(29129, "ru")'>ru</span> <span class='translation translation_29129 translation_fr' onclick='switchTranslation(29129, "fr")'>fr</span> <span class='translation translation_29129 translation_es' onclick='switchTranslation(29129, "es")'>es</span> <span class='translation translation_29129 translation_id' onclick='switchTranslation(29129, "id")'>id</span> <span class='translation translation_29129 translation_pt' onclick='switchTranslation(29129, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34569">
+<h2 class="post_title post_title_34569">
+    <a href="https://photography.tutsplus.com/tutorials/7-posing-techniques-for-non-models--photo-15608">7 Posing Techniques for Non-Models</a>
+</h2>
+<div class="translations translations_34569">
+    <span class='translation translation_34569 translation_en' onclick='switchTranslation(34569, "en")'>en</span> <span class='translation translation_34569 translation_zh-hans' onclick='switchTranslation(34569, "zh-hans")'>zh-hans</span> <span class='translation translation_34569 translation_fr' onclick='switchTranslation(34569, "fr")'>fr</span> <span class='translation translation_34569 translation_se' onclick='switchTranslation(34569, "se")'>se</span> <span class='translation translation_34569 translation_es' onclick='switchTranslation(34569, "es")'>es</span> <span class='translation translation_34569 translation_pt' onclick='switchTranslation(34569, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34700">
+<h2 class="post_title post_title_34700">
+    <a href="https://photography.tutsplus.com/articles/100-free-photoshop-actions-and-how-to-make-your-own--photo-3502">100 Free Photoshop Actions (And How to Make Your Own)</a>
+</h2>
+<div class="translations translations_34700">
+    <span class='translation translation_34700 translation_en' onclick='switchTranslation(34700, "en")'>en</span> <span class='translation translation_34700 translation_bg' onclick='switchTranslation(34700, "bg")'>bg</span> <span class='translation translation_34700 translation_zh-hans' onclick='switchTranslation(34700, "zh-hans")'>zh-hans</span> <span class='translation translation_34700 translation_pt' onclick='switchTranslation(34700, "pt")'>pt</span> <span class='translation translation_34700 translation_fr' onclick='switchTranslation(34700, "fr")'>fr</span> <span class='translation translation_34700 translation_es' onclick='switchTranslation(34700, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_38996">
+<h2 class="post_title post_title_38996">
+    <a href="https://webdesign.tutsplus.com/articles/9-quick-wins-for-halfway-decent-design--cms-19444">9 Quick Wins for Halfway-Decent Design</a>
+</h2>
+<div class="translations translations_38996">
+    <span class='translation translation_38996 translation_en' onclick='switchTranslation(38996, "en")'>en</span> <span class='translation translation_38996 translation_id' onclick='switchTranslation(38996, "id")'>id</span> <span class='translation translation_38996 translation_de' onclick='switchTranslation(38996, "de")'>de</span> <span class='translation translation_38996 translation_fr' onclick='switchTranslation(38996, "fr")'>fr</span> <span class='translation translation_38996 translation_es' onclick='switchTranslation(38996, "es")'>es</span> <span class='translation translation_38996 translation_pt' onclick='switchTranslation(38996, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_28563">
+<h2 class="post_title post_title_28563">
+    <a href="https://webdesign.tutsplus.com/articles/an-introduction-to-seo--webdesign-9408">An Introduction to SEO</a>
+</h2>
+<div class="translations translations_28563">
+    <span class='translation translation_28563 translation_en' onclick='switchTranslation(28563, "en")'>en</span> <span class='translation translation_28563 translation_fr' onclick='switchTranslation(28563, "fr")'>fr</span> <span class='translation translation_28563 translation_es' onclick='switchTranslation(28563, "es")'>es</span> <span class='translation translation_28563 translation_pt' onclick='switchTranslation(28563, "pt")'>pt</span> <span class='translation translation_28563 translation_de' onclick='switchTranslation(28563, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_29016">
+<h2 class="post_title post_title_29016">
+    <a href="https://webdesign.tutsplus.com/articles/build-an-html-email-template-from-scratch--webdesign-12770">Build an HTML Email Template From Scratch</a>
+</h2>
+<div class="translations translations_29016">
+    <span class='translation translation_29016 translation_en' onclick='switchTranslation(29016, "en")'>en</span> <span class='translation translation_29016 translation_fr' onclick='switchTranslation(29016, "fr")'>fr</span> <span class='translation translation_29016 translation_pt' onclick='switchTranslation(29016, "pt")'>pt</span> <span class='translation translation_29016 translation_id' onclick='switchTranslation(29016, "id")'>id</span> <span class='translation translation_29016 translation_es' onclick='switchTranslation(29016, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_32462">
+<h2 class="post_title post_title_32462">
+    <a href="https://code.tutsplus.com/tutorials/quick-tip-jquery-newbs-stop-jumping-in-the-pool--net-22142">Quick Tip - jQuery Newbs: Stop Jumping in the Pool</a>
+</h2>
+<div class="translations translations_32462">
+    <span class='translation translation_32462 translation_en' onclick='switchTranslation(32462, "en")'>en</span> <span class='translation translation_32462 translation_pt' onclick='switchTranslation(32462, "pt")'>pt</span> <span class='translation translation_32462 translation_fr' onclick='switchTranslation(32462, "fr")'>fr</span> <span class='translation translation_32462 translation_es' onclick='switchTranslation(32462, "es")'>es</span> <span class='translation translation_32462 translation_de' onclick='switchTranslation(32462, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_41076">
+<h2 class="post_title post_title_41076">
+    <a href="https://webdesign.tutsplus.com/tutorials/sketch-for-beginners-design-a-login-form-interface--cms-21534">Sketch for Beginners: Design a Login Form Interface</a>
+</h2>
+<div class="translations translations_41076">
+    <span class='translation translation_41076 translation_en' onclick='switchTranslation(41076, "en")'>en</span> <span class='translation translation_41076 translation_es' onclick='switchTranslation(41076, "es")'>es</span> <span class='translation translation_41076 translation_fr' onclick='switchTranslation(41076, "fr")'>fr</span> <span class='translation translation_41076 translation_fr' onclick='switchTranslation(41076, "fr")'>fr</span> <span class='translation translation_41076 translation_es' onclick='switchTranslation(41076, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41446">
+<h2 class="post_title post_title_41446">
+    <a href="https://webdesign.tutsplus.com/tutorials/creating-a-collection-of-css3-animated-pre-loaders--cms-21978">Creating a Collection of CSS3 Animated Pre-loaders</a>
+</h2>
+<div class="translations translations_41446">
+    <span class='translation translation_41446 translation_en' onclick='switchTranslation(41446, "en")'>en</span> <span class='translation translation_41446 translation_tr' onclick='switchTranslation(41446, "tr")'>tr</span> <span class='translation translation_41446 translation_es' onclick='switchTranslation(41446, "es")'>es</span> <span class='translation translation_41446 translation_it' onclick='switchTranslation(41446, "it")'>it</span> <span class='translation translation_41446 translation_pt' onclick='switchTranslation(41446, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_22872">
+<h2 class="post_title post_title_22872">
+    <a href="https://crafts.tutsplus.com/tutorials/how-to-decorate-a-coffee-mug-using-a-porcelain-marker--craft-7454">How to Decorate a Coffee Mug Using a Porcelain Marker</a>
+</h2>
+<div class="translations translations_22872">
+    <span class='translation translation_22872 translation_en' onclick='switchTranslation(22872, "en")'>en</span> <span class='translation translation_22872 translation_es' onclick='switchTranslation(22872, "es")'>es</span> <span class='translation translation_22872 translation_pt' onclick='switchTranslation(22872, "pt")'>pt</span> <span class='translation translation_22872 translation_fr' onclick='switchTranslation(22872, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_23110">
+<h2 class="post_title post_title_23110">
+    <a href="https://webdesign.tutsplus.com/tutorials/9-sketch-features-you-should-be-using--webdesign-18016">9 Sketch Features You Should be Using</a>
+</h2>
+<div class="translations translations_23110">
+    <span class='translation translation_23110 translation_en' onclick='switchTranslation(23110, "en")'>en</span> <span class='translation translation_23110 translation_pt' onclick='switchTranslation(23110, "pt")'>pt</span> <span class='translation translation_23110 translation_id' onclick='switchTranslation(23110, "id")'>id</span> <span class='translation translation_23110 translation_zh-hant' onclick='switchTranslation(23110, "zh-hant")'>zh-hant</span>
+</div>
+</div>
+    
+<div class="post post_23983">
+<h2 class="post_title post_title_23983">
+    <a href="https://computers.tutsplus.com/tutorials/10-terminal-commands-that-every-mac-user-should-know--mac-4825">10 Terminal Commands That Every Mac User Should Know</a>
+</h2>
+<div class="translations translations_23983">
+    <span class='translation translation_23983 translation_en' onclick='switchTranslation(23983, "en")'>en</span> <span class='translation translation_23983 translation_pt' onclick='switchTranslation(23983, "pt")'>pt</span> <span class='translation translation_23983 translation_es' onclick='switchTranslation(23983, "es")'>es</span> <span class='translation translation_23983 translation_de' onclick='switchTranslation(23983, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_27038">
+<h2 class="post_title post_title_27038">
+    <a href="https://webdesign.tutsplus.com/tutorials/bring-your-forms-up-to-date-with-css3-and-html5-validation--webdesign-4738">Bring Your Forms Up to Date With CSS3 and HTML5 Validation</a>
+</h2>
+<div class="translations translations_27038">
+    <span class='translation translation_27038 translation_en' onclick='switchTranslation(27038, "en")'>en</span> <span class='translation translation_27038 translation_es' onclick='switchTranslation(27038, "es")'>es</span> <span class='translation translation_27038 translation_pt' onclick='switchTranslation(27038, "pt")'>pt</span> <span class='translation translation_27038 translation_zh-hans' onclick='switchTranslation(27038, "zh-hans")'>zh-hans</span>
+</div>
+</div>
+    
+<div class="post post_31985">
+<h2 class="post_title post_title_31985">
+    <a href="https://code.tutsplus.com/tutorials/28-html5-features-tips-and-techniques-you-must-know--net-13520">28 HTML5 Features, Tips, and Techniques you Must Know</a>
+</h2>
+<div class="translations translations_31985">
+    <span class='translation translation_31985 translation_en' onclick='switchTranslation(31985, "en")'>en</span> <span class='translation translation_31985 translation_ru' onclick='switchTranslation(31985, "ru")'>ru</span> <span class='translation translation_31985 translation_es' onclick='switchTranslation(31985, "es")'>es</span> <span class='translation translation_31985 translation_pt' onclick='switchTranslation(31985, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_36674">
+<h2 class="post_title post_title_36674">
+    <a href="https://design.tutsplus.com/tutorials/creating-a-simple-kawaii-yeti-with-basic-shapes-in-adobe-illustrator--vector-10738">Creating a Simple Kawaii Yeti With Basic Shapes in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_36674">
+    <span class='translation translation_36674 translation_en' onclick='switchTranslation(36674, "en")'>en</span> <span class='translation translation_36674 translation_nl' onclick='switchTranslation(36674, "nl")'>nl</span> <span class='translation translation_36674 translation_es' onclick='switchTranslation(36674, "es")'>es</span> <span class='translation translation_36674 translation_zh-hans' onclick='switchTranslation(36674, "zh-hans")'>zh-hans</span>
+</div>
+</div>
+    
+<div class="post post_38699">
+<h2 class="post_title post_title_38699">
+    <a href="https://computers.tutsplus.com/tutorials/how-to-use-vpn-on-your-mac--mac-46053">How to Use VPN on Your Mac</a>
+</h2>
+<div class="translations translations_38699">
+    <span class='translation translation_38699 translation_en' onclick='switchTranslation(38699, "en")'>en</span> <span class='translation translation_38699 translation_es' onclick='switchTranslation(38699, "es")'>es</span> <span class='translation translation_38699 translation_se' onclick='switchTranslation(38699, "se")'>se</span> <span class='translation translation_38699 translation_pt' onclick='switchTranslation(38699, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40901">
+<h2 class="post_title post_title_40901">
+    <a href="https://webdesign.tutsplus.com/tutorials/get-up-and-running-with-google-web-starter-kit--cms-21495">Get up and Running with Google Web Starter Kit</a>
+</h2>
+<div class="translations translations_40901">
+    <span class='translation translation_40901 translation_en' onclick='switchTranslation(40901, "en")'>en</span> <span class='translation translation_40901 translation_id' onclick='switchTranslation(40901, "id")'>id</span> <span class='translation translation_40901 translation_es' onclick='switchTranslation(40901, "es")'>es</span> <span class='translation translation_40901 translation_pt' onclick='switchTranslation(40901, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41213">
+<h2 class="post_title post_title_41213">
+    <a href="https://code.tutsplus.com/tutorials/create-a-custom-theme-with-opencart-introduction--cms-21786">Create a Custom Theme With OpenCart: Introduction</a>
+</h2>
+<div class="translations translations_41213">
+    <span class='translation translation_41213 translation_en' onclick='switchTranslation(41213, "en")'>en</span> <span class='translation translation_41213 translation_es' onclick='switchTranslation(41213, "es")'>es</span> <span class='translation translation_41213 translation_zh-hans' onclick='switchTranslation(41213, "zh-hans")'>zh-hans</span> <span class='translation translation_41213 translation_zh-hant' onclick='switchTranslation(41213, "zh-hant")'>zh-hant</span>
+</div>
+</div>
+    
+<div class="post post_27161">
+<h2 class="post_title post_title_27161">
+    <a href="https://code.tutsplus.com/tutorials/24-javascript-best-practices-for-beginners--net-5399">24 JavaScript Best Practices for Beginners</a>
+</h2>
+<div class="translations translations_27161">
+    <span class='translation translation_27161 translation_en' onclick='switchTranslation(27161, "en")'>en</span> <span class='translation translation_27161 translation_nl' onclick='switchTranslation(27161, "nl")'>nl</span> <span class='translation translation_27161 translation_pt' onclick='switchTranslation(27161, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34707">
+<h2 class="post_title post_title_34707">
+    <a href="https://photography.tutsplus.com/articles/100-free-lightroom-presets-and-how-to-make-your-own--photo-8640">100 Free Lightroom Presets (And How to Make Your Own)</a>
+</h2>
+<div class="translations translations_34707">
+    <span class='translation translation_34707 translation_en' onclick='switchTranslation(34707, "en")'>en</span> <span class='translation translation_34707 translation_bg' onclick='switchTranslation(34707, "bg")'>bg</span> <span class='translation translation_34707 translation_es' onclick='switchTranslation(34707, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_35889">
+<h2 class="post_title post_title_35889">
+    <a href="https://code.tutsplus.com/tutorials/laravel-4-a-start-at-a-restful-api-updated--net-29785">Laravel 4: A Start at a RESTful API (Updated)</a>
+</h2>
+<div class="translations translations_35889">
+    <span class='translation translation_35889 translation_en' onclick='switchTranslation(35889, "en")'>en</span> <span class='translation translation_35889 translation_pt' onclick='switchTranslation(35889, "pt")'>pt</span> <span class='translation translation_35889 translation_fr' onclick='switchTranslation(35889, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_36721">
+<h2 class="post_title post_title_36721">
+    <a href="https://design.tutsplus.com/articles/capture-colors-with-the-adobe-kuler-app-for-the-iphone--vector-12494">Capture Colors With the Adobe Kuler App for the iPhone</a>
+</h2>
+<div class="translations translations_36721">
+    <span class='translation translation_36721 translation_en' onclick='switchTranslation(36721, "en")'>en</span> <span class='translation translation_36721 translation_es' onclick='switchTranslation(36721, "es")'>es</span> <span class='translation translation_36721 translation_nl' onclick='switchTranslation(36721, "nl")'>nl</span>
+</div>
+</div>
+    
+<div class="post post_38247">
+<h2 class="post_title post_title_38247">
+    <a href="https://code.tutsplus.com/tutorials/windows-phone-8-creating-your-first-application--mobile-21175">Windows Phone 8: Creating Your First Application</a>
+</h2>
+<div class="translations translations_38247">
+    <span class='translation translation_38247 translation_en' onclick='switchTranslation(38247, "en")'>en</span> <span class='translation translation_38247 translation_fr' onclick='switchTranslation(38247, "fr")'>fr</span> <span class='translation translation_38247 translation_bg' onclick='switchTranslation(38247, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_38724">
+<h2 class="post_title post_title_38724">
+    <a href="https://code.tutsplus.com/tutorials/solid-part-1-the-single-responsibility-principle--net-36074">SOLID: Part 1 - The Single Responsibility Principle</a>
+</h2>
+<div class="translations translations_38724">
+    <span class='translation translation_38724 translation_en' onclick='switchTranslation(38724, "en")'>en</span> <span class='translation translation_38724 translation_pt' onclick='switchTranslation(38724, "pt")'>pt</span> <span class='translation translation_38724 translation_fr' onclick='switchTranslation(38724, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_38916">
+<h2 class="post_title post_title_38916">
+    <a href="https://code.tutsplus.com/articles/quick-tip-restore-admin-menu-separators--wp-34850">Quick Tip: Restore Admin Menu Separators</a>
+</h2>
+<div class="translations translations_38916">
+    <span class='translation translation_38916 translation_en' onclick='switchTranslation(38916, "en")'>en</span> <span class='translation translation_38916 translation_de' onclick='switchTranslation(38916, "de")'>de</span> <span class='translation translation_38916 translation_pt' onclick='switchTranslation(38916, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39447">
+<h2 class="post_title post_title_39447">
+    <a href="https://code.tutsplus.com/tutorials/object-oriented-programming-in-wordpress-an-introduction--cms-19916">Object-Oriented Programming in WordPress: An Introduction</a>
+</h2>
+<div class="translations translations_39447">
+    <span class='translation translation_39447 translation_en' onclick='switchTranslation(39447, "en")'>en</span> <span class='translation translation_39447 translation_pt' onclick='switchTranslation(39447, "pt")'>pt</span> <span class='translation translation_39447 translation_it' onclick='switchTranslation(39447, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_39961">
+<h2 class="post_title post_title_39961">
+    <a href="https://code.tutsplus.com/tutorials/an-introduction-to-using-bower-with-wordpress--cms-20501">An Introduction to Using Bower With WordPress</a>
+</h2>
+<div class="translations translations_39961">
+    <span class='translation translation_39961 translation_en' onclick='switchTranslation(39961, "en")'>en</span> <span class='translation translation_39961 translation_de' onclick='switchTranslation(39961, "de")'>de</span> <span class='translation translation_39961 translation_pt' onclick='switchTranslation(39961, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40601">
+<h2 class="post_title post_title_40601">
+    <a href="https://webdesign.tutsplus.com/tutorials/quick-tip-what-to-do-when-you-encounter-a-bower-file--cms-21162">Quick Tip: What to do When You Encounter a Bower File</a>
+</h2>
+<div class="translations translations_40601">
+    <span class='translation translation_40601 translation_en' onclick='switchTranslation(40601, "en")'>en</span> <span class='translation translation_40601 translation_id' onclick='switchTranslation(40601, "id")'>id</span> <span class='translation translation_40601 translation_pt' onclick='switchTranslation(40601, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40930">
+<h2 class="post_title post_title_40930">
+    <a href="https://webdesign.tutsplus.com/articles/how-to-create-your-own-html-elements-with-web-components--cms-21524">How to Create Your Own HTML Elements With Web Components</a>
+</h2>
+<div class="translations translations_40930">
+    <span class='translation translation_40930 translation_en' onclick='switchTranslation(40930, "en")'>en</span> <span class='translation translation_40930 translation_pt' onclick='switchTranslation(40930, "pt")'>pt</span> <span class='translation translation_40930 translation_pt' onclick='switchTranslation(40930, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41055">
+<h2 class="post_title post_title_41055">
+    <a href="https://webdesign.tutsplus.com/tutorials/recreating-the-touch-ripple-effect-as-seen-on-google-design--cms-21655">Recreating the Touch Ripple Effect as Seen on Google Design</a>
+</h2>
+<div class="translations translations_41055">
+    <span class='translation translation_41055 translation_en' onclick='switchTranslation(41055, "en")'>en</span> <span class='translation translation_41055 translation_bg' onclick='switchTranslation(41055, "bg")'>bg</span> <span class='translation translation_41055 translation_bg' onclick='switchTranslation(41055, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_41244">
+<h2 class="post_title post_title_41244">
+    <a href="https://code.tutsplus.com/tutorials/7-non-raster-approaches-for-making-the-hamburger-menu-icon--cms-21686">7 Non-raster Approaches for Making the “Hamburger” Menu Icon</a>
+</h2>
+<div class="translations translations_41244">
+    <span class='translation translation_41244 translation_en' onclick='switchTranslation(41244, "en")'>en</span> <span class='translation translation_41244 translation_fr' onclick='switchTranslation(41244, "fr")'>fr</span> <span class='translation translation_41244 translation_fr' onclick='switchTranslation(41244, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_41287">
+<h2 class="post_title post_title_41287">
+    <a href="https://code.tutsplus.com/articles/a-guide-to-wordpress-40--cms-21906">A Guide to WordPress 4.0</a>
+</h2>
+<div class="translations translations_41287">
+    <span class='translation translation_41287 translation_en' onclick='switchTranslation(41287, "en")'>en</span> <span class='translation translation_41287 translation_pt' onclick='switchTranslation(41287, "pt")'>pt</span> <span class='translation translation_41287 translation_it' onclick='switchTranslation(41287, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_41385">
+<h2 class="post_title post_title_41385">
+    <a href="https://code.tutsplus.com/articles/html5-page-visibility-api--cms-22021">HTML5 Page Visibility API</a>
+</h2>
+<div class="translations translations_41385">
+    <span class='translation translation_41385 translation_en' onclick='switchTranslation(41385, "en")'>en</span> <span class='translation translation_41385 translation_pt' onclick='switchTranslation(41385, "pt")'>pt</span> <span class='translation translation_41385 translation_es' onclick='switchTranslation(41385, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41564">
+<h2 class="post_title post_title_41564">
+    <a href="https://webdesign.tutsplus.com/tutorials/using-grunt-to-make-your-email-design-workflow-fun-again--cms-22223">Using Grunt to Make Your Email Design Workflow Fun Again</a>
+</h2>
+<div class="translations translations_41564">
+    <span class='translation translation_41564 translation_en' onclick='switchTranslation(41564, "en")'>en</span> <span class='translation translation_41564 translation_es' onclick='switchTranslation(41564, "es")'>es</span> <span class='translation translation_41564 translation_fr' onclick='switchTranslation(41564, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_21709">
+<h2 class="post_title post_title_21709">
+    <a href="https://gamedevelopment.tutsplus.com/tutorials/the-three-simple-rules-of-flocking-behaviors-alignment-cohesion-and-separation--gamedev-3444">The Three Simple Rules of Flocking Behaviors: Alignment, Cohesion, and Separation</a>
+</h2>
+<div class="translations translations_21709">
+    <span class='translation translation_21709 translation_en' onclick='switchTranslation(21709, "en")'>en</span> <span class='translation translation_21709 translation_ru' onclick='switchTranslation(21709, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_22626">
+<h2 class="post_title post_title_22626">
+    <a href="https://computers.tutsplus.com/tutorials/what-to-do-when-your-macs-startup-disk-is-almost-full--mac-31780">What To Do When Your Mac's Startup Disk is Almost Full</a>
+</h2>
+<div class="translations translations_22626">
+    <span class='translation translation_22626 translation_en' onclick='switchTranslation(22626, "en")'>en</span> <span class='translation translation_22626 translation_pt' onclick='switchTranslation(22626, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_23539">
+<h2 class="post_title post_title_23539">
+    <a href="https://gamedevelopment.tutsplus.com/tutorials/make-a-match-3-game-in-construct-2-the-basics--gamedev-8071">Make a Match-3 Game in Construct 2: The Basics</a>
+</h2>
+<div class="translations translations_23539">
+    <span class='translation translation_23539 translation_en' onclick='switchTranslation(23539, "en")'>en</span> <span class='translation translation_23539 translation_ru' onclick='switchTranslation(23539, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_23932">
+<h2 class="post_title post_title_23932">
+    <a href="https://code.tutsplus.com/tutorials/ios-5-sdk-uialertview-text-input-and-validation--mobile-8388">iOS 5 SDK: UIAlertView Text Input and Validation</a>
+</h2>
+<div class="translations translations_23932">
+    <span class='translation translation_23932 translation_en' onclick='switchTranslation(23932, "en")'>en</span> <span class='translation translation_23932 translation_ru' onclick='switchTranslation(23932, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_25640">
+<h2 class="post_title post_title_25640">
+    <a href="https://webdesign.tutsplus.com/articles/quick-and-easy-documentation-using-markdown--webdesign-8163">Quick and Easy Documentation Using Markdown</a>
+</h2>
+<div class="translations translations_25640">
+    <span class='translation translation_25640 translation_en' onclick='switchTranslation(25640, "en")'>en</span> <span class='translation translation_25640 translation_es' onclick='switchTranslation(25640, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_26366">
+<h2 class="post_title post_title_26366">
+    <a href="https://webdesign.tutsplus.com/articles/getting-started-with-scalable-vector-graphics-svg--webdesign-7515">Getting Started With Scalable Vector Graphics (SVG)</a>
+</h2>
+<div class="translations translations_26366">
+    <span class='translation translation_26366 translation_en' onclick='switchTranslation(26366, "en")'>en</span> <span class='translation translation_26366 translation_pt' onclick='switchTranslation(26366, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_26773">
+<h2 class="post_title post_title_26773">
+    <a href="https://webdesign.tutsplus.com/articles/understanding-the-split-layout-in-web-design--webdesign-9551">Understanding the Split Layout in Web Design</a>
+</h2>
+<div class="translations translations_26773">
+    <span class='translation translation_26773 translation_en' onclick='switchTranslation(26773, "en")'>en</span> <span class='translation translation_26773 translation_pt' onclick='switchTranslation(26773, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_27177">
+<h2 class="post_title post_title_27177">
+    <a href="https://design.tutsplus.com/tutorials/creating-a-personalized-pet-portrait-in-illustrator-cs5--vector-4030">Creating a Personalized Pet Portrait in Illustrator CS5</a>
+</h2>
+<div class="translations translations_27177">
+    <span class='translation translation_27177 translation_en' onclick='switchTranslation(27177, "en")'>en</span> <span class='translation translation_27177 translation_es' onclick='switchTranslation(27177, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_28722">
+<h2 class="post_title post_title_28722">
+    <a href="https://design.tutsplus.com/tutorials/how-to-create-a-landscape-wallpaper-for-your-desktop--vector-2160">How to Create a Landscape Wallpaper for your Desktop</a>
+</h2>
+<div class="translations translations_28722">
+    <span class='translation translation_28722 translation_en' onclick='switchTranslation(28722, "en")'>en</span> <span class='translation translation_28722 translation_ru' onclick='switchTranslation(28722, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_28878">
+<h2 class="post_title post_title_28878">
+    <a href="https://webdesign.tutsplus.com/articles/taking-the-erm-out-of-ems--webdesign-12321">Taking the “Erm..” Out of Ems</a>
+</h2>
+<div class="translations translations_28878">
+    <span class='translation translation_28878 translation_en' onclick='switchTranslation(28878, "en")'>en</span> <span class='translation translation_28878 translation_pt' onclick='switchTranslation(28878, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_30548">
+<h2 class="post_title post_title_30548">
+    <a href="https://cgi.tutsplus.com/tutorials/creating-a-low-poly-ninja-game-character-using-blender-part-1--cg-16132">Creating A Low Poly Ninja Game Character Using Blender: Part 1</a>
+</h2>
+<div class="translations translations_30548">
+    <span class='translation translation_30548 translation_en' onclick='switchTranslation(30548, "en")'>en</span> <span class='translation translation_30548 translation_es' onclick='switchTranslation(30548, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_30559">
+<h2 class="post_title post_title_30559">
+    <a href="https://cgi.tutsplus.com/tutorials/creating-a-low-poly-ninja-game-character-using-blender-part-2--cg-16133">Creating A Low Poly Ninja Game Character Using Blender: Part 2</a>
+</h2>
+<div class="translations translations_30559">
+    <span class='translation translation_30559 translation_en' onclick='switchTranslation(30559, "en")'>en</span> <span class='translation translation_30559 translation_es' onclick='switchTranslation(30559, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_30702">
+<h2 class="post_title post_title_30702">
+    <a href="https://design.tutsplus.com/tutorials/how-to-create-a-stylish-wireless-phone--vector-3708">How to Create a Stylish Wireless Phone</a>
+</h2>
+<div class="translations translations_30702">
+    <span class='translation translation_30702 translation_en' onclick='switchTranslation(30702, "en")'>en</span> <span class='translation translation_30702 translation_es' onclick='switchTranslation(30702, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_31392">
+<h2 class="post_title post_title_31392">
+    <a href="https://photography.tutsplus.com/articles/rules-for-perfect-lighting-understanding-the-inverse-square-law--photo-3483">Rules for Perfect Lighting: Understanding The Inverse-Square Law</a>
+</h2>
+<div class="translations translations_31392">
+    <span class='translation translation_31392 translation_en' onclick='switchTranslation(31392, "en")'>en</span> <span class='translation translation_31392 translation_de' onclick='switchTranslation(31392, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_32950">
+<h2 class="post_title post_title_32950">
+    <a href="https://code.tutsplus.com/tutorials/object-oriented-php-for-beginners--net-12762">Object-Oriented PHP for Beginners</a>
+</h2>
+<div class="translations translations_32950">
+    <span class='translation translation_32950 translation_en' onclick='switchTranslation(32950, "en")'>en</span> <span class='translation translation_32950 translation_pt' onclick='switchTranslation(32950, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_33603">
+<h2 class="post_title post_title_33603">
+    <a href="https://code.tutsplus.com/tutorials/understanding-hash-functions-and-keeping-passwords-safe--net-17577">Understanding Hash Functions and Keeping Passwords Safe</a>
+</h2>
+<div class="translations translations_33603">
+    <span class='translation translation_33603 translation_en' onclick='switchTranslation(33603, "en")'>en</span> <span class='translation translation_33603 translation_pt' onclick='switchTranslation(33603, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_33675">
+<h2 class="post_title post_title_33675">
+    <a href="https://code.tutsplus.com/tutorials/5-awesome-angularjs-features--net-25651">5 Awesome AngularJS Features</a>
+</h2>
+<div class="translations translations_33675">
+    <span class='translation translation_33675 translation_en' onclick='switchTranslation(33675, "en")'>en</span> <span class='translation translation_33675 translation_it' onclick='switchTranslation(33675, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_34036">
+<h2 class="post_title post_title_34036">
+    <a href="https://code.tutsplus.com/tutorials/pdo-vs-mysqli-which-should-you-use--net-24059">PDO vs. MySQLi: Which Should You Use?</a>
+</h2>
+<div class="translations translations_34036">
+    <span class='translation translation_34036 translation_en' onclick='switchTranslation(34036, "en")'>en</span> <span class='translation translation_34036 translation_pt' onclick='switchTranslation(34036, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34044">
+<h2 class="post_title post_title_34044">
+    <a href="https://code.tutsplus.com/tutorials/why-you-should-be-using-phps-pdo-for-database-access--net-12059">Why you Should be using PHP's PDO for Database Access</a>
+</h2>
+<div class="translations translations_34044">
+    <span class='translation translation_34044 translation_en' onclick='switchTranslation(34044, "en")'>en</span> <span class='translation translation_34044 translation_pt' onclick='switchTranslation(34044, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_34048">
+<h2 class="post_title post_title_34048">
+    <a href="https://code.tutsplus.com/tutorials/getting-started-with-mongodb-part-1--net-22879">Getting Started with MongoDB - Part 1</a>
+</h2>
+<div class="translations translations_34048">
+    <span class='translation translation_34048 translation_en' onclick='switchTranslation(34048, "en")'>en</span> <span class='translation translation_34048 translation_es' onclick='switchTranslation(34048, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_34167">
+<h2 class="post_title post_title_34167">
+    <a href="https://design.tutsplus.com/tutorials/illustrators-type-tool-a-comprehensive-introduction--vector-521">Illustrator's Type Tool: A Comprehensive Introduction</a>
+</h2>
+<div class="translations translations_34167">
+    <span class='translation translation_34167 translation_en' onclick='switchTranslation(34167, "en")'>en</span> <span class='translation translation_34167 translation_ru' onclick='switchTranslation(34167, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_34314">
+<h2 class="post_title post_title_34314">
+    <a href="https://code.tutsplus.com/tutorials/improve-your-apps-performance-with-memcached--net-26768">Improve Your App’s Performance with Memcached</a>
+</h2>
+<div class="translations translations_34314">
+    <span class='translation translation_34314 translation_en' onclick='switchTranslation(34314, "en")'>en</span> <span class='translation translation_34314 translation_fr' onclick='switchTranslation(34314, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_34599">
+<h2 class="post_title post_title_34599">
+    <a href="https://design.tutsplus.com/tutorials/create-a-sparkly-female-portrait-in-illustrator--vector-4408">Create a Sparkly Female Portrait in Illustrator</a>
+</h2>
+<div class="translations translations_34599">
+    <span class='translation translation_34599 translation_en' onclick='switchTranslation(34599, "en")'>en</span> <span class='translation translation_34599 translation_es' onclick='switchTranslation(34599, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_34924">
+<h2 class="post_title post_title_34924">
+    <a href="https://code.tutsplus.com/tutorials/the-10-html-tags-beginners-arent-using--net-12458">The 10 HTML Tags Beginners Aren’t Using</a>
+</h2>
+<div class="translations translations_34924">
+    <span class='translation translation_34924 translation_en' onclick='switchTranslation(34924, "en")'>en</span> <span class='translation translation_34924 translation_es' onclick='switchTranslation(34924, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_36767">
+<h2 class="post_title post_title_36767">
+    <a href="https://design.tutsplus.com/tutorials/illustrators-pen-tool-the-comprehensive-guide--vector-141">Illustrator’s Pen Tool: The Comprehensive Guide</a>
+</h2>
+<div class="translations translations_36767">
+    <span class='translation translation_36767 translation_en' onclick='switchTranslation(36767, "en")'>en</span> <span class='translation translation_36767 translation_es' onclick='switchTranslation(36767, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_36809">
+<h2 class="post_title post_title_36809">
+    <a href="https://design.tutsplus.com/tutorials/create-a-cute-and-simple-panda-with-basic-shapes-in-adobe-illustrator--vector-14203">Create a Cute and Simple Panda With Basic Shapes in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_36809">
+    <span class='translation translation_36809 translation_en' onclick='switchTranslation(36809, "en")'>en</span> <span class='translation translation_36809 translation_es' onclick='switchTranslation(36809, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_36942">
+<h2 class="post_title post_title_36942">
+    <a href="https://design.tutsplus.com/articles/cartoon-fundamentals-how-to-draw-a-cartoon-face-correctly--vector-15792">Cartoon Fundamentals: How to Draw a Cartoon Face Correctly</a>
+</h2>
+<div class="translations translations_36942">
+    <span class='translation translation_36942 translation_en' onclick='switchTranslation(36942, "en")'>en</span> <span class='translation translation_36942 translation_ro' onclick='switchTranslation(36942, "ro")'>ro</span>
+</div>
+</div>
+    
+<div class="post post_37395">
+<h2 class="post_title post_title_37395">
+    <a href="https://gamedevelopment.tutsplus.com/articles/how-to-learn-threejs-for-game-development--gamedev-11787">How to Learn Three.js for Game Development</a>
+</h2>
+<div class="translations translations_37395">
+    <span class='translation translation_37395 translation_en' onclick='switchTranslation(37395, "en")'>en</span> <span class='translation translation_37395 translation_pt' onclick='switchTranslation(37395, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_37405">
+<h2 class="post_title post_title_37405">
+    <a href="https://webdesign.tutsplus.com/tutorials/setting-up-foundation-with-sass-and-compass--webdesign-15288">Setting up Foundation With Sass and Compass</a>
+</h2>
+<div class="translations translations_37405">
+    <span class='translation translation_37405 translation_en' onclick='switchTranslation(37405, "en")'>en</span> <span class='translation translation_37405 translation_it' onclick='switchTranslation(37405, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_38183">
+<h2 class="post_title post_title_38183">
+    <a href="https://design.tutsplus.com/tutorials/create-a-skating-girl-with-basic-shapes-in-adobe-illustrator--vector-21071">Create a Skating Girl With Basic Shapes in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_38183">
+    <span class='translation translation_38183 translation_en' onclick='switchTranslation(38183, "en")'>en</span> <span class='translation translation_38183 translation_id' onclick='switchTranslation(38183, "id")'>id</span>
+</div>
+</div>
+    
+<div class="post post_38346">
+<h2 class="post_title post_title_38346">
+    <a href="https://cgi.tutsplus.com/tutorials/secrets-to-creating-low-poly-illustrations-in-blender--cg-31770">Secrets to Creating Low Poly Illustrations in Blender</a>
+</h2>
+<div class="translations translations_38346">
+    <span class='translation translation_38346 translation_en' onclick='switchTranslation(38346, "en")'>en</span> <span class='translation translation_38346 translation_es' onclick='switchTranslation(38346, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_38563">
+<h2 class="post_title post_title_38563">
+    <a href="https://code.tutsplus.com/tutorials/the-best-way-to-learn-javascript--net-21954">The Best Way to Learn JavaScript</a>
+</h2>
+<div class="translations translations_38563">
+    <span class='translation translation_38563 translation_en' onclick='switchTranslation(38563, "en")'>en</span> <span class='translation translation_38563 translation_fr' onclick='switchTranslation(38563, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_38587">
+<h2 class="post_title post_title_38587">
+    <a href="https://code.tutsplus.com/tutorials/testing-laravel-controllers--net-31456">Testing Laravel Controllers</a>
+</h2>
+<div class="translations translations_38587">
+    <span class='translation translation_38587 translation_en' onclick='switchTranslation(38587, "en")'>en</span> <span class='translation translation_38587 translation_pt' onclick='switchTranslation(38587, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_38660">
+<h2 class="post_title post_title_38660">
+    <a href="https://code.tutsplus.com/tutorials/bdd-with-behat--net-36171">BDD With Behat</a>
+</h2>
+<div class="translations translations_38660">
+    <span class='translation translation_38660 translation_en' onclick='switchTranslation(38660, "en")'>en</span> <span class='translation translation_38660 translation_pt' onclick='switchTranslation(38660, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_38769">
+<h2 class="post_title post_title_38769">
+    <a href="https://code.tutsplus.com/tutorials/solid-part-2-the-openclosed-principle--net-36600">SOLID: Part 2 - The Open/Closed Principle</a>
+</h2>
+<div class="translations translations_38769">
+    <span class='translation translation_38769 translation_en' onclick='switchTranslation(38769, "en")'>en</span> <span class='translation translation_38769 translation_pt' onclick='switchTranslation(38769, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_38828">
+<h2 class="post_title post_title_38828">
+    <a href="https://webdesign.tutsplus.com/tutorials/quick-tip-spare-a-thought-for-vertical-break-points--webdesign-18387">Quick Tip: Spare a Thought for Vertical Break Points</a>
+</h2>
+<div class="translations translations_38828">
+    <span class='translation translation_38828 translation_en' onclick='switchTranslation(38828, "en")'>en</span> <span class='translation translation_38828 translation_es' onclick='switchTranslation(38828, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_38831">
+<h2 class="post_title post_title_38831">
+    <a href="https://code.tutsplus.com/tutorials/solid-part-3-liskov-substitution-interface-segregation-principles--net-36710">SOLID: Part 3 - Liskov Substitution & Interface Segregation Principles</a>
+</h2>
+<div class="translations translations_38831">
+    <span class='translation translation_38831 translation_en' onclick='switchTranslation(38831, "en")'>en</span> <span class='translation translation_38831 translation_pt' onclick='switchTranslation(38831, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_38868">
+<h2 class="post_title post_title_38868">
+    <a href="https://design.tutsplus.com/tutorials/create-a-mixed-martial-arts-event-flyer-in-photoshop--psd-36109">Create a Mixed Martial Arts Event Flyer in Photoshop</a>
+</h2>
+<div class="translations translations_38868">
+    <span class='translation translation_38868 translation_en' onclick='switchTranslation(38868, "en")'>en</span> <span class='translation translation_38868 translation_es' onclick='switchTranslation(38868, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_38963">
+<h2 class="post_title post_title_38963">
+    <a href="https://code.tutsplus.com/tutorials/solid-part-4-the-dependency-inversion-principle--net-36872">SOLID: Part 4 - The Dependency Inversion Principle</a>
+</h2>
+<div class="translations translations_38963">
+    <span class='translation translation_38963 translation_en' onclick='switchTranslation(38963, "en")'>en</span> <span class='translation translation_38963 translation_pt' onclick='switchTranslation(38963, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39050">
+<h2 class="post_title post_title_39050">
+    <a href="https://webdesign.tutsplus.com/articles/an-introduction-to-the-bem-methodology--cms-19403">An Introduction to the BEM Methodology</a>
+</h2>
+<div class="translations translations_39050">
+    <span class='translation translation_39050 translation_en' onclick='switchTranslation(39050, "en")'>en</span> <span class='translation translation_39050 translation_pt' onclick='switchTranslation(39050, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39239">
+<h2 class="post_title post_title_39239">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-1--cms-19723">Female Character Modeling in Blender: Part 1</a>
+</h2>
+<div class="translations translations_39239">
+    <span class='translation translation_39239 translation_en' onclick='switchTranslation(39239, "en")'>en</span> <span class='translation translation_39239 translation_es' onclick='switchTranslation(39239, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39446">
+<h2 class="post_title post_title_39446">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-2--cms-19914">Female Character Modeling in Blender: Part 2</a>
+</h2>
+<div class="translations translations_39446">
+    <span class='translation translation_39446 translation_en' onclick='switchTranslation(39446, "en")'>en</span> <span class='translation translation_39446 translation_es' onclick='switchTranslation(39446, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39449">
+<h2 class="post_title post_title_39449">
+    <a href="https://code.tutsplus.com/tutorials/introduction-to-the-mean-stack--cms-19918">Introduction to the MEAN Stack</a>
+</h2>
+<div class="translations translations_39449">
+    <span class='translation translation_39449 translation_en' onclick='switchTranslation(39449, "en")'>en</span> <span class='translation translation_39449 translation_pt' onclick='switchTranslation(39449, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39470">
+<h2 class="post_title post_title_39470">
+    <a href="https://code.tutsplus.com/tutorials/laravel-unwrapped-session-auth-and-cache--cms-19952">Laravel Unwrapped: Session, Auth and Cache</a>
+</h2>
+<div class="translations translations_39470">
+    <span class='translation translation_39470 translation_en' onclick='switchTranslation(39470, "en")'>en</span> <span class='translation translation_39470 translation_pt' onclick='switchTranslation(39470, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39478">
+<h2 class="post_title post_title_39478">
+    <a href="https://design.tutsplus.com/tutorials/create-the-captain-america-shield-icon-in-adobe-illustrator--cms-19964">Create the Captain America Shield Icon in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_39478">
+    <span class='translation translation_39478 translation_en' onclick='switchTranslation(39478, "en")'>en</span> <span class='translation translation_39478 translation_es' onclick='switchTranslation(39478, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39516">
+<h2 class="post_title post_title_39516">
+    <a href="https://code.tutsplus.com/tutorials/object-oriented-programming-in-wordpress-classes--cms-20021">Object-Oriented Programming in WordPress: Classes</a>
+</h2>
+<div class="translations translations_39516">
+    <span class='translation translation_39516 translation_en' onclick='switchTranslation(39516, "en")'>en</span> <span class='translation translation_39516 translation_pt' onclick='switchTranslation(39516, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39773">
+<h2 class="post_title post_title_39773">
+    <a href="https://code.tutsplus.com/tutorials/object-oriented-programming-in-wordpress-types--cms-20299">Object-Oriented Programming in WordPress: Types</a>
+</h2>
+<div class="translations translations_39773">
+    <span class='translation translation_39773 translation_en' onclick='switchTranslation(39773, "en")'>en</span> <span class='translation translation_39773 translation_pt' onclick='switchTranslation(39773, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39819">
+<h2 class="post_title post_title_39819">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-3--cms-20358">Female Character Modeling in Blender: Part 3</a>
+</h2>
+<div class="translations translations_39819">
+    <span class='translation translation_39819 translation_en' onclick='switchTranslation(39819, "en")'>en</span> <span class='translation translation_39819 translation_es' onclick='switchTranslation(39819, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39920">
+<h2 class="post_title post_title_39920">
+    <a href="https://code.tutsplus.com/tutorials/using-polymer-to-create-web-components--cms-20475">Using Polymer to Create Web Components</a>
+</h2>
+<div class="translations translations_39920">
+    <span class='translation translation_39920 translation_en' onclick='switchTranslation(39920, "en")'>en</span> <span class='translation translation_39920 translation_pt' onclick='switchTranslation(39920, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39921">
+<h2 class="post_title post_title_39921">
+    <a href="https://code.tutsplus.com/tutorials/windows-phone-8-an-introduction-to-xaml--cms-20476">Windows Phone 8: An Introduction to XAML</a>
+</h2>
+<div class="translations translations_39921">
+    <span class='translation translation_39921 translation_en' onclick='switchTranslation(39921, "en")'>en</span> <span class='translation translation_39921 translation_fr' onclick='switchTranslation(39921, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_39930">
+<h2 class="post_title post_title_39930">
+    <a href="https://code.tutsplus.com/tutorials/windows-phone-8-working-with-media-content--cms-20490">Windows Phone 8: Working With Media Content</a>
+</h2>
+<div class="translations translations_39930">
+    <span class='translation translation_39930 translation_en' onclick='switchTranslation(39930, "en")'>en</span> <span class='translation translation_39930 translation_es' onclick='switchTranslation(39930, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39932">
+<h2 class="post_title post_title_39932">
+    <a href="https://code.tutsplus.com/tutorials/windows-phone-8-events-and-navigation--cms-20493">Windows Phone 8: Events and Navigation</a>
+</h2>
+<div class="translations translations_39932">
+    <span class='translation translation_39932 translation_en' onclick='switchTranslation(39932, "en")'>en</span> <span class='translation translation_39932 translation_es' onclick='switchTranslation(39932, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_39962">
+<h2 class="post_title post_title_39962">
+    <a href="https://code.tutsplus.com/tutorials/using-bower-to-improve-wordpress-development--cms-20524">Using Bower To Improve WordPress Development</a>
+</h2>
+<div class="translations translations_39962">
+    <span class='translation translation_39962 translation_en' onclick='switchTranslation(39962, "en")'>en</span> <span class='translation translation_39962 translation_pt' onclick='switchTranslation(39962, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39963">
+<h2 class="post_title post_title_39963">
+    <a href="https://code.tutsplus.com/tutorials/how-to-setup-bower-in-your-next-project--cms-20526">How to Setup Bower in Your Next Project</a>
+</h2>
+<div class="translations translations_39963">
+    <span class='translation translation_39963 translation_en' onclick='switchTranslation(39963, "en")'>en</span> <span class='translation translation_39963 translation_pt' onclick='switchTranslation(39963, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_39979">
+<h2 class="post_title post_title_39979">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-4--cms-20547">Female Character Modeling in Blender: Part 4</a>
+</h2>
+<div class="translations translations_39979">
+    <span class='translation translation_39979 translation_en' onclick='switchTranslation(39979, "en")'>en</span> <span class='translation translation_39979 translation_es' onclick='switchTranslation(39979, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40152">
+<h2 class="post_title post_title_40152">
+    <a href="https://code.tutsplus.com/tutorials/componentizing-the-web--cms-20602">Componentizing the Web</a>
+</h2>
+<div class="translations translations_40152">
+    <span class='translation translation_40152 translation_en' onclick='switchTranslation(40152, "en")'>en</span> <span class='translation translation_40152 translation_pt' onclick='switchTranslation(40152, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40321">
+<h2 class="post_title post_title_40321">
+    <a href="https://design.tutsplus.com/tutorials/create-a-retro-footballer-in-adobe-illustrator-for-the-world-cup--cms-20827">Create a Retro Footballer in Adobe Illustrator for the World Cup</a>
+</h2>
+<div class="translations translations_40321">
+    <span class='translation translation_40321 translation_en' onclick='switchTranslation(40321, "en")'>en</span> <span class='translation translation_40321 translation_pt' onclick='switchTranslation(40321, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40328">
+<h2 class="post_title post_title_40328">
+    <a href="https://code.tutsplus.com/tutorials/adding-custom-fields-to-wordpress-programmatically--cms-20838">Adding Custom Fields To WordPress Programmatically</a>
+</h2>
+<div class="translations translations_40328">
+    <span class='translation translation_40328 translation_en' onclick='switchTranslation(40328, "en")'>en</span> <span class='translation translation_40328 translation_de' onclick='switchTranslation(40328, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_40514">
+<h2 class="post_title post_title_40514">
+    <a href="https://code.tutsplus.com/articles/an-introduction-to-wordpress-global-variables--cms-20855">An Introduction to WordPress Global Variables</a>
+</h2>
+<div class="translations translations_40514">
+    <span class='translation translation_40514 translation_en' onclick='switchTranslation(40514, "en")'>en</span> <span class='translation translation_40514 translation_de' onclick='switchTranslation(40514, "de")'>de</span>
+</div>
+</div>
+    
+<div class="post post_40396">
+<h2 class="post_title post_title_40396">
+    <a href="https://code.tutsplus.com/tutorials/getting-started-with-phpspec--cms-20919">Getting Started With Phpspec</a>
+</h2>
+<div class="translations translations_40396">
+    <span class='translation translation_40396 translation_en' onclick='switchTranslation(40396, "en")'>en</span> <span class='translation translation_40396 translation_pt' onclick='switchTranslation(40396, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40464">
+<h2 class="post_title post_title_40464">
+    <a href="https://code.tutsplus.com/tutorials/fixing-the-wordpress-white-screen-of-death--cms-21008">Fixing the WordPress White Screen of Death</a>
+</h2>
+<div class="translations translations_40464">
+    <span class='translation translation_40464 translation_en' onclick='switchTranslation(40464, "en")'>en</span> <span class='translation translation_40464 translation_it' onclick='switchTranslation(40464, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_40479">
+<h2 class="post_title post_title_40479">
+    <a href="https://webdesign.tutsplus.com/tutorials/quick-tip-how-to-use-html5-picture-for-responsive-images--cms-21015">Quick Tip: How to Use HTML5 “picture” for Responsive Images</a>
+</h2>
+<div class="translations translations_40479">
+    <span class='translation translation_40479 translation_en' onclick='switchTranslation(40479, "en")'>en</span> <span class='translation translation_40479 translation_es' onclick='switchTranslation(40479, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40478">
+<h2 class="post_title post_title_40478">
+    <a href="https://design.tutsplus.com/tutorials/create-an-easy-field-of-flowers-pattern-design-in-adobe-illustrator--cms-21024">Create an Easy Field of Flowers Pattern Design in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_40478">
+    <span class='translation translation_40478 translation_en' onclick='switchTranslation(40478, "en")'>en</span> <span class='translation translation_40478 translation_es' onclick='switchTranslation(40478, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40528">
+<h2 class="post_title post_title_40528">
+    <a href="https://code.tutsplus.com/tutorials/adding-to-the-body-class-in-wordpress--cms-21077">Adding to the Body Class in WordPress</a>
+</h2>
+<div class="translations translations_40528">
+    <span class='translation translation_40528 translation_en' onclick='switchTranslation(40528, "en")'>en</span> <span class='translation translation_40528 translation_fr' onclick='switchTranslation(40528, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_40539">
+<h2 class="post_title post_title_40539">
+    <a href="https://crafts.tutsplus.com/tutorials/how-to-make-a-bar-of-felted-soap--cms-21090">How to Make a Bar of Felted Soap</a>
+</h2>
+<div class="translations translations_40539">
+    <span class='translation translation_40539 translation_en' onclick='switchTranslation(40539, "en")'>en</span> <span class='translation translation_40539 translation_pt' onclick='switchTranslation(40539, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40560">
+<h2 class="post_title post_title_40560">
+    <a href="https://webdesign.tutsplus.com/tutorials/create-a-masked-background-effect-with-css--cms-21112">Create a Masked Background Effect With CSS</a>
+</h2>
+<div class="translations translations_40560">
+    <span class='translation translation_40560 translation_en' onclick='switchTranslation(40560, "en")'>en</span> <span class='translation translation_40560 translation_es' onclick='switchTranslation(40560, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40650">
+<h2 class="post_title post_title_40650">
+    <a href="https://design.tutsplus.com/tutorials/render-a-simple-3d-pixel-space-invaders-in-adobe-illustrator--cms-21185">Render a Simple 3D Pixel Space Invaders in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_40650">
+    <span class='translation translation_40650 translation_en' onclick='switchTranslation(40650, "en")'>en</span> <span class='translation translation_40650 translation_es' onclick='switchTranslation(40650, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40651">
+<h2 class="post_title post_title_40651">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-5--cms-21211">Female Character Modeling in Blender: Part 5</a>
+</h2>
+<div class="translations translations_40651">
+    <span class='translation translation_40651 translation_en' onclick='switchTranslation(40651, "en")'>en</span> <span class='translation translation_40651 translation_es' onclick='switchTranslation(40651, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40693">
+<h2 class="post_title post_title_40693">
+    <a href="https://code.tutsplus.com/tutorials/sharing-polymer-components-part-1--cms-21264">Sharing Polymer Components: Part 1</a>
+</h2>
+<div class="translations translations_40693">
+    <span class='translation translation_40693 translation_en' onclick='switchTranslation(40693, "en")'>en</span> <span class='translation translation_40693 translation_pt' onclick='switchTranslation(40693, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_40781">
+<h2 class="post_title post_title_40781">
+    <a href="https://cgi.tutsplus.com/tutorials/female-character-modeling-in-blender-part-6--cms-21357">Female Character Modeling in Blender: Part 6</a>
+</h2>
+<div class="translations translations_40781">
+    <span class='translation translation_40781 translation_en' onclick='switchTranslation(40781, "en")'>en</span> <span class='translation translation_40781 translation_es' onclick='switchTranslation(40781, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40793">
+<h2 class="post_title post_title_40793">
+    <a href="https://code.tutsplus.com/articles/resources-for-staying-on-top-of-javascript--cms-21369">Resources for Staying on Top of JavaScript</a>
+</h2>
+<div class="translations translations_40793">
+    <span class='translation translation_40793 translation_en' onclick='switchTranslation(40793, "en")'>en</span> <span class='translation translation_40793 translation_bg' onclick='switchTranslation(40793, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_40798">
+<h2 class="post_title post_title_40798">
+    <a href="https://webdesign.tutsplus.com/tutorials/all-you-ever-need-to-know-about-sass-interpolation--cms-21375">All You Ever Need to Know About Sass Interpolation</a>
+</h2>
+<div class="translations translations_40798">
+    <span class='translation translation_40798 translation_en' onclick='switchTranslation(40798, "en")'>en</span> <span class='translation translation_40798 translation_fr' onclick='switchTranslation(40798, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_40807">
+<h2 class="post_title post_title_40807">
+    <a href="https://code.tutsplus.com/tutorials/an-introduction-to-swift-part-1--cms-21389">An Introduction to Swift: Part 1</a>
+</h2>
+<div class="translations translations_40807">
+    <span class='translation translation_40807 translation_en' onclick='switchTranslation(40807, "en")'>en</span> <span class='translation translation_40807 translation_it' onclick='switchTranslation(40807, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_40833">
+<h2 class="post_title post_title_40833">
+    <a href="https://code.tutsplus.com/tutorials/single-page-todo-application-with-backbonejs--cms-21417">Single Page ToDo Application With Backbone.js</a>
+</h2>
+<div class="translations translations_40833">
+    <span class='translation translation_40833 translation_en' onclick='switchTranslation(40833, "en")'>en</span> <span class='translation translation_40833 translation_bg' onclick='switchTranslation(40833, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_40835">
+<h2 class="post_title post_title_40835">
+    <a href="https://code.tutsplus.com/tutorials/custom-layouts-and-templates-with-magento--cms-21419">Custom Layouts and Templates with Magento</a>
+</h2>
+<div class="translations translations_40835">
+    <span class='translation translation_40835 translation_en' onclick='switchTranslation(40835, "en")'>en</span> <span class='translation translation_40835 translation_es' onclick='switchTranslation(40835, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_40893">
+<h2 class="post_title post_title_40893">
+    <a href="https://code.tutsplus.com/tutorials/an-introduction-to-swift-part-2--cms-21484">An Introduction to Swift: Part 2</a>
+</h2>
+<div class="translations translations_40893">
+    <span class='translation translation_40893 translation_en' onclick='switchTranslation(40893, "en")'>en</span> <span class='translation translation_40893 translation_it' onclick='switchTranslation(40893, "it")'>it</span>
+</div>
+</div>
+    
+<div class="post post_40905">
+<h2 class="post_title post_title_40905">
+    <a href="https://code.tutsplus.com/tutorials/sharing-polymer-components-part-2--cms-21497">Sharing Polymer Components: Part 2</a>
+</h2>
+<div class="translations translations_40905">
+    <span class='translation translation_40905 translation_en' onclick='switchTranslation(40905, "en")'>en</span> <span class='translation translation_40905 translation_pt' onclick='switchTranslation(40905, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41499">
+<h2 class="post_title post_title_41499">
+    <a href="https://webdesign.tutsplus.com/articles/plugins-resources-and-freebies-to-spice-up-sketch--cms-21533">Plugins, Resources and Freebies to Spice up Sketch</a>
+</h2>
+<div class="translations translations_41499">
+    <span class='translation translation_41499 translation_en' onclick='switchTranslation(41499, "en")'>en</span> <span class='translation translation_41499 translation_ru' onclick='switchTranslation(41499, "ru")'>ru</span>
+</div>
+</div>
+    
+<div class="post post_40966">
+<h2 class="post_title post_title_40966">
+    <a href="https://design.tutsplus.com/tutorials/how-to-create-a-seamless-vintage-nautical-life-pattern-in-adobe-illustrator--cms-21559">How to Create a Seamless Vintage Nautical Life Pattern in Adobe Illustrator</a>
+</h2>
+<div class="translations translations_40966">
+    <span class='translation translation_40966 translation_en' onclick='switchTranslation(40966, "en")'>en</span> <span class='translation translation_40966 translation_id' onclick='switchTranslation(40966, "id")'>id</span>
+</div>
+</div>
+    
+<div class="post post_41026">
+<h2 class="post_title post_title_41026">
+    <a href="https://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619">Authenticating Node.js Applications With Passport</a>
+</h2>
+<div class="translations translations_41026">
+    <span class='translation translation_41026 translation_en' onclick='switchTranslation(41026, "en")'>en</span> <span class='translation translation_41026 translation_pt' onclick='switchTranslation(41026, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41061">
+<h2 class="post_title post_title_41061">
+    <a href="https://code.tutsplus.com/tutorials/creating-the-starting-files-for-your-wordpress-theme-framework--cms-21662">Creating the Starting Files for Your WordPress Theme Framework</a>
+</h2>
+<div class="translations translations_41061">
+    <span class='translation translation_41061 translation_en' onclick='switchTranslation(41061, "en")'>en</span> <span class='translation translation_41061 translation_es' onclick='switchTranslation(41061, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41139">
+<h2 class="post_title post_title_41139">
+    <a href="https://code.tutsplus.com/tutorials/implementing-the-eu-cookie-law-into-your-wordpress-site--cms-21750">Implementing the EU Cookie Law Into Your WordPress Site</a>
+</h2>
+<div class="translations translations_41139">
+    <span class='translation translation_41139 translation_en' onclick='switchTranslation(41139, "en")'>en</span> <span class='translation translation_41139 translation_fr' onclick='switchTranslation(41139, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_41188">
+<h2 class="post_title post_title_41188">
+    <a href="https://code.tutsplus.com/articles/modules-a-future-approach-to-javascript-libraries--cms-21800">Modules, a Future Approach to JavaScript Libraries</a>
+</h2>
+<div class="translations translations_41188">
+    <span class='translation translation_41188 translation_en' onclick='switchTranslation(41188, "en")'>en</span> <span class='translation translation_41188 translation_bg' onclick='switchTranslation(41188, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_41230">
+<h2 class="post_title post_title_41230">
+    <a href="https://code.tutsplus.com/tutorials/extending-html-with-angularjss-directives--cms-21840">Extending HTML with AngularJS’s Directives</a>
+</h2>
+<div class="translations translations_41230">
+    <span class='translation translation_41230 translation_en' onclick='switchTranslation(41230, "en")'>en</span> <span class='translation translation_41230 translation_fr' onclick='switchTranslation(41230, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_41236">
+<h2 class="post_title post_title_41236">
+    <a href="https://crafts.tutsplus.com/tutorials/jewellery-fundamentals-how-to-kumihimo-braid--cms-21848">Jewellery Fundamentals: How to Kumihimo Braid</a>
+</h2>
+<div class="translations translations_41236">
+    <span class='translation translation_41236 translation_en' onclick='switchTranslation(41236, "en")'>en</span> <span class='translation translation_41236 translation_pt' onclick='switchTranslation(41236, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41249">
+<h2 class="post_title post_title_41249">
+    <a href="https://code.tutsplus.com/tutorials/create-a-custom-theme-with-opencart-part-two--cms-21865">Create a Custom Theme With OpenCart: Part Two</a>
+</h2>
+<div class="translations translations_41249">
+    <span class='translation translation_41249 translation_en' onclick='switchTranslation(41249, "en")'>en</span> <span class='translation translation_41249 translation_es' onclick='switchTranslation(41249, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41256">
+<h2 class="post_title post_title_41256">
+    <a href="https://code.tutsplus.com/tutorials/from-beginner-to-advanced-in-opencart-module-development--cms-21873">From Beginner to Advanced in OpenCart: Module Development</a>
+</h2>
+<div class="translations translations_41256">
+    <span class='translation translation_41256 translation_en' onclick='switchTranslation(41256, "en")'>en</span> <span class='translation translation_41256 translation_es' onclick='switchTranslation(41256, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41265">
+<h2 class="post_title post_title_41265">
+    <a href="https://code.tutsplus.com/tutorials/accessing-external-apis-using-angularjss-services--cms-21884">Accessing External APIs Using AngularJS's Services</a>
+</h2>
+<div class="translations translations_41265">
+    <span class='translation translation_41265 translation_en' onclick='switchTranslation(41265, "en")'>en</span> <span class='translation translation_41265 translation_pt' onclick='switchTranslation(41265, "pt")'>pt</span>
+</div>
+</div>
+    
+<div class="post post_41271">
+<h2 class="post_title post_title_41271">
+    <a href="https://code.tutsplus.com/tutorials/create-a-custom-theme-with-opencart-part-three--cms-21890">Create a Custom Theme With OpenCart: Part Three</a>
+</h2>
+<div class="translations translations_41271">
+    <span class='translation translation_41271 translation_en' onclick='switchTranslation(41271, "en")'>en</span> <span class='translation translation_41271 translation_es' onclick='switchTranslation(41271, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41289">
+<h2 class="post_title post_title_41289">
+    <a href="https://code.tutsplus.com/articles/five-hidden-gems-of-laravel--cms-21907">Five Hidden Gems of Laravel</a>
+</h2>
+<div class="translations translations_41289">
+    <span class='translation translation_41289 translation_en' onclick='switchTranslation(41289, "en")'>en</span> <span class='translation translation_41289 translation_es' onclick='switchTranslation(41289, "es")'>es</span>
+</div>
+</div>
+    
+<div class="post post_41363">
+<h2 class="post_title post_title_41363">
+    <a href="https://webdesign.tutsplus.com/tutorials/how-to-build-an-off-canvas-navigation-layout-with-bootstrap--cms-21991">How to Build an Off-Canvas Navigation Layout With Bootstrap</a>
+</h2>
+<div class="translations translations_41363">
+    <span class='translation translation_41363 translation_en' onclick='switchTranslation(41363, "en")'>en</span> <span class='translation translation_41363 translation_bg' onclick='switchTranslation(41363, "bg")'>bg</span>
+</div>
+</div>
+    
+<div class="post post_41365">
+<h2 class="post_title post_title_41365">
+    <a href="https://code.tutsplus.com/tutorials/options-for-ssl-in-wordpress--cms-21995">Options for SSL in WordPress</a>
+</h2>
+<div class="translations translations_41365">
+    <span class='translation translation_41365 translation_en' onclick='switchTranslation(41365, "en")'>en</span> <span class='translation translation_41365 translation_fr' onclick='switchTranslation(41365, "fr")'>fr</span>
+</div>
+</div>
+    
+<div class="post post_41539">
+<h2 class="post_title post_title_41539">
+    <a href="https://code.tutsplus.com/tutorials/creating-maintainable-wordpress-meta-boxes--cms-22189">Creating Maintainable WordPress Meta Boxes</a>
+</h2>
+<div class="translations translations_41539">
+    <span class='translation translation_41539 translation_en' onclick='switchTranslation(41539, "en")'>en</span> <span class='translation translation_41539 translation_fr' onclick='switchTranslation(41539, "fr")'>fr</span>
+</div>
+</div>
+    
 
 	<footer>
-	&copy; 2014 Envato Pty Ltd.
+	&copy; 2014 Envato Pty Ltd. Last updated on 2014-10-06.
 	</footer>
    
 </section>    
