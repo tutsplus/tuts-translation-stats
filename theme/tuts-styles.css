@@ -125,7 +125,7 @@ span.selected {
 }
 
 span.translation:before {
-	content: attr(data-langnative);
+	content: attr(data-nativelang);
 	font-size: 10px;
 	font-weight: bold;
 	letter-spacing: .2em;
