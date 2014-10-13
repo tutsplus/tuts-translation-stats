@@ -127,27 +127,25 @@ span.selected {
 span.translation:before {
 	content: attr(data-nativelang);
 	font-size: 10px;
-	font-weight: bold;
-	letter-spacing: .2em;
+	padding: 0 5px;
+	height: 2em;
+	line-height: 2;
 	display: block;
 	opacity: 0;
 	background: #2a3744;
 	color: #c0ccdb;
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: -1em;
 	border-radius: 2px;
-	-webkit-transition: all 0.2s ease-in-out;
-	-moz-transition: all 0.2s ease-in-out;
-	-o-transition: all 0.2s ease-in-out;
-	transition: all 0.2s ease-in-out;
 }
 
 span.translation:hover:before,
 span.selected:before {
 	opacity: 1;
-	top: -5px;
-	left: -5px;
+	top: -1em;
+	-webkit-animation: fadeInUp .5s;
+    animation: fadeInUp .5s;
 }
 
 
