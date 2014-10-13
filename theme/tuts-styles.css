@@ -125,19 +125,22 @@ span.selected {
 }
 
 span.translation:before {
-	content: "";
-	height: 11px;
-	width: 16px;
+	content: attr(data-langnative);
+	font-size: 10px;
+	font-weight: bold;
+	letter-spacing: .2em;
 	display: block;
 	opacity: 0;
-	background: red;
+	background: #2a3744;
+	color: #c0ccdb;
 	position: absolute;
 	top: 0;
 	left: 0;
-	-webkit-transition: all 0.15s ease-in;
-	-moz-transition: all 0.15s ease-in;
-	-o-transition: all 0.15s ease-in;
-	transition: all 0.15s ease-in;
+	border-radius: 2px;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
 }
 
 span.translation:hover:before,
@@ -146,25 +149,6 @@ span.selected:before {
 	top: -5px;
 	left: -5px;
 }
-
-/* flags */
-span.translation_ro:before { 	background: url(flags/ro.gif) no-repeat 0 0;	}
-span.translation_se:before { 	background: url(flags/se.gif) no-repeat 0 0;	}
-span.translation_nl:before { 	background: url(flags/nl.gif) no-repeat 0 0;	}
-span.translation_it:before { 	background: url(flags/it.gif) no-repeat 0 0;	}
-span.translation_bg:before { 	background: url(flags/bg.gif) no-repeat 0 0;	}
-span.translation_en:before { 	background: url(flags/gb.gif) no-repeat 0 0;	}
-span.translation_es:before { 	background: url(flags/es.gif) no-repeat 0 0;	}
-span.translation_fr:before { 	background: url(flags/fr.gif) no-repeat 0 0;	}
-span.translation_de:before { 	background: url(flags/de.gif) no-repeat 0 0;	}
-span.translation_hu:before { 	background: url(flags/hu.gif) no-repeat 0 0;	}
-span.translation_tr:before { 	background: url(flags/tr.gif) no-repeat 0 0;	}
-span.translation_id:before { 	background: url(flags/id.gif) no-repeat 0 0;	}
-span.translation_pt:before { 	background: url(flags/pt.gif) no-repeat 0 0;	}
-span.translation_pl:before { 	background: url(flags/pl.gif) no-repeat 0 0;	}
-span.translation_ru:before { 	background: url(flags/ru.gif) no-repeat 0 0;	}
-span.translation_zh-hant:before { 	background: url(flags/cn.gif) no-repeat 0 0;	}
-span.translation_zh-hans:before { 	background: url(flags/cn.gif) no-repeat 0 0;	}
 
 
 /* label */
